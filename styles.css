@@ -1,0 +1,174 @@
+/**
+ * Author: Ajay Singh
+ * Version: 0.1
+ * Date: 19-09-2024
+ * Description: CSS for styling the Aew Portfolio project, including layout, colors, typography, and responsive design.
+ */
+
+ body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 20px;
+    background-color: #f9f9f9;
+}
+
+h1 {
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+#card-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    justify-content: center;
+}
+
+/* Default style for larger screens */
+.card {
+    width: calc(20% - 20px); /* 5 cards per row with 20px gap */
+    height: 300px; /* Adjusted height to accommodate content */
+    perspective: 1000px; /* Creates a 3D space for the flip effect */
+    position: relative; /* Required for positioning phone numbers and icons */
+}
+
+/* Media query for smaller screens */
+@media (max-width: 768px) {
+    .card {
+        width: calc(50% - 20px); /* 2 cards per row with 20px gap */
+    }
+}
+
+.card-inner {
+    width: 100%;
+    height: 100%;
+    position: relative;
+    transform-style: preserve-3d; /* Enables 3D transformations for child elements */
+    transition: transform 0.6s; /* Smooth transition for the flip effect */
+}
+
+.card.flipped .card-inner {
+    transform: rotateY(180deg); /* Flips the card */
+}
+
+.card-face {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    backface-visibility: hidden; /* Hides the back side when flipped */
+    display: flex;
+    flex-direction: column; /* Allows stacking of elements */
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    background: white;
+}
+
+.card-face.front {
+    z-index: 2; /* Ensure the front face is above the back face */
+}
+
+.card-face.back {
+    transform: rotateY(180deg); /* Initially hides the back side */
+    z-index: 1; /* Ensure the back face is below the front face */
+    padding: 10px; /* Padding inside the card */
+    box-sizing: border-box;
+    position: relative; /* Required for positioning elements inside */
+}
+
+.card-number {
+    font-size: 12px; /* Smaller font size */
+    color: #888; /* Lighter color */
+    position: absolute;
+    top: 10px;
+    left: 10px;
+    font-weight: normal; /* Normal weight to reduce prominence */
+}
+
+.card-face.front .company-name {
+    font-size: 16px;
+    font-weight: bold;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%); /* Centered horizontally and vertically */
+}
+
+.card-face.front .place-name {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+}
+
+.card-face.back .company-name {
+    font-size: 16px;
+    font-weight: bold;
+    position: absolute;
+    top: 10px;
+    left: 50%;
+    transform: translateX(-50%); /* Centered horizontally at the top */
+}
+
+.card-face.back .customer-name {
+    font-size: 14px;
+    color: #333;
+    margin-bottom: 10px; /* Space between customer name and description */
+    white-space: pre-wrap; /* Preserves line breaks */
+    text-align: center;
+}
+
+.card-face.back .project-description {
+    font-size: 14px;
+    color: #333;
+    text-align: center;
+}
+
+.card-face.back .place-name {
+    font-size: 14px;
+    color: #555;
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+}
+
+/* Existing CSS rules */
+
+.phone-numbers {
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    text-align: left;
+    display: flex;
+    flex-direction: column; /* Stack phone numbers vertically */
+    gap: 5px; /* Space between phone numbers */
+}
+
+.phone-number-group {
+    display: flex;
+    flex-direction: column; /* Stack groups vertically */
+    gap: 5px; /* Space between groups */
+}
+
+.phone-number-group .phone-number {
+    font-size: 14px;
+    color: #555;
+}
+
+.phone-number-group .phone-number-top {
+    color: #000; /* Color for the first 10 digits */
+}
+
+.phone-number-group .phone-number-bottom {
+    color: #333; /* Color for the remaining 10 digits */
+}
+
+.phone-icon {
+    position: absolute;
+    bottom: 10px;
+    left: 10px;
+    font-size: 20px;
+    color: #333;
+    cursor: pointer;
+}
