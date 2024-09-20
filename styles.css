@@ -33,15 +33,13 @@ header img#logo {
     position: absolute;
     left: 20px;
     width: 120px; /* Adjust logo size */
-    height: auto;
 }
 
 header img#header-title {
     width: 200px; /* Centered SVG title */
-    height: auto;
 }
 
-/* Adjust padding for body content to avoid overlap with header */
+/* Adjust padding for body content */
 body {
     padding-top: 100px; /* Avoid content hiding under header */
 }
@@ -125,7 +123,7 @@ body {
 }
 
 .card-face.back {
-    background-color: #262727; /* Dark back face */
+    background-color: #3a3a3a; /* New distinct dark back face color */
     color: #fefffe;
     transform: rotateY(180deg);
     padding: 10px;
@@ -143,14 +141,14 @@ body {
 
 .company-name {
     font-size: 18px;
-    font-weight: bold;
-    color: #d73b23; /* Red company name */
+    font-weight: bold; /* Bold company name */
+    color: #d73b23; /* Bright red for visibility */
     margin-bottom: 10px;
 }
 
 .customer-name, .project-description {
     font-size: 14px;
-    color: #fefffe;
+    color: #fefffe; /* Light text for readability */
     margin-bottom: 5px;
     text-align: center;
 }
@@ -158,7 +156,7 @@ body {
 /* Place Name on Flipped Cards */
 .place-name {
     font-size: 14px;
-    color: #fefffe;
+    color: #fefffe; /* Light color for text */
     position: absolute;
     bottom: 10px;
     right: 10px; /* Moved to bottom-right on back */
@@ -177,7 +175,7 @@ body {
 
 .phone-icon {
     font-size: 16px;
-    color: #fefffe;
+    color: #fefffe; /* Light text for visibility */
     cursor: pointer;
 }
 
@@ -209,5 +207,37 @@ body {
     100% {
         transform: scale(1);
         opacity: 1;
+    }
+}
+
+
+/* Loading Screen Styles */
+#loading-screen {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(28, 28, 28, 0.8); /* Semi-transparent dark background */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 2000; /* Higher than other content */
+    backdrop-filter: blur(5px); /* Blur background */
+    display: none; /* Hidden by default */
+}
+
+#loading-cog {
+    width: 50px; /* Adjust size */
+    height: 50px; /* Adjust size */
+    animation: rotate 1s linear infinite; /* Continuous rotation */
+}
+
+@keyframes rotate {
+    0% {
+        transform: rotate(0deg);
+    }
+    100% {
+        transform: rotate(360deg);
     }
 }

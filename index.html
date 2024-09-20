@@ -1,10 +1,9 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AEW Portfolio</title>
+    <title>AEW</title>
 
     <!-- Favicon and Apple Touch Icons -->
     <link rel="apple-touch-icon" sizes="180x180" href="favicon_io/apple-touch-icon.png">
@@ -19,33 +18,25 @@
 
 <body>
     <header>
-        <!-- Top-left logo -->
-        <img src="svg/aew-full_logo.svg" alt="AEW Logo" id="logo">
-        
-        <!-- Centered SVG Heading -->
-        <img src="svg/AEW.svg" alt="AEW Portfolio" id="header-title">
+        <img src="svg/aew-full_logo.svg" alt="AEW" id="logo">
+        <img src="svg/AEW.svg" alt="AEW" id="header-title">
     </header>
     
     <div id="dashboard">
-        <div id="total-projects">
-            Total Projects: <span id="projects-count">0</span>
-        </div>
-        <div id="distinct-cities">
-            Cities: <span id="cities-count">0</span>
-        </div>
-        <div id="distinct-companies">
-            Companies: <span id="companies-count">0</span>
-        </div>
-    </div>
-    
-    <div id="card-container">
+        <div id="total-projects">Total Projects: <span id="projects-count">0</span></div>
+        <div id="distinct-cities">Cities: <span id="cities-count">0</span></div>
+        <div id="distinct-companies">Companies: <span id="companies-count">0</span></div>
     </div>
 
-    <footer>
-        <p>&copy; 2024 AEW. All rights reserved.</p>
-    </footer>
+    <div id="loading-screen">
+        <img src="svg/AEW-COG.svg" alt="Loading" id="loading-cog">
+    </div>
+    
+    
+    
+    
+    <div id="card-container"></div>
 
     <script src="script.js"></script>
 </body>
-
 </html>

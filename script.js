@@ -1,10 +1,13 @@
 document.addEventListener("DOMContentLoaded", function() {
     const url = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRT_ixy3nU4dbCgnMMyR05vP4dQePsnwZ4_UgCuP-x0XdcHVv9X87v6kYP-q2ouBk8UIaK8khj80FJ3/pub?gid=1138944004&single=true&output=csv';
-    
+
     const header = document.querySelector('header');
     header.addEventListener('click', () => {
         location.reload(); // Reloads the current page
     });
+
+    const loadingScreen = document.getElementById('loading-screen');
+    loadingScreen.style.display = 'flex'; // Show loading screen
 
     fetch(url)
         .then(response => response.text())
@@ -125,5 +128,8 @@ document.addEventListener("DOMContentLoaded", function() {
         .catch(error => {
             console.error('Error fetching the CSV data:', error);
             document.getElementById('card-container').innerHTML = "<p>Error loading data. Please try again later.</p>";
+        })
+        .finally(() => {
+            loadingScreen.style.display = 'none'; // Hide loading screen
         });
 });
