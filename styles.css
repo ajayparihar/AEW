@@ -1,11 +1,4 @@
-/**
- * Author: Ajay Singh
- * Version: 0.1
- * Date: 19-09-2024
- * Description: CSS for styling the Aew Portfolio project, including layout, colors, typography, and responsive design.
- */
-
- body {
+body {
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 20px;
@@ -27,7 +20,7 @@ h1 {
 /* Default style for larger screens */
 .card {
     width: calc(20% - 20px); /* 5 cards per row with 20px gap */
-    height: 300px; /* Adjusted height to accommodate content */
+    height: 300px; /* Fixed height for square cards */
     perspective: 1000px; /* Creates a 3D space for the flip effect */
     position: relative; /* Required for positioning phone numbers and icons */
 }
@@ -133,8 +126,6 @@ h1 {
     right: 10px;
 }
 
-/* Existing CSS rules */
-
 .phone-numbers {
     position: absolute;
     bottom: 10px;
@@ -145,30 +136,8 @@ h1 {
     gap: 5px; /* Space between phone numbers */
 }
 
-.phone-number-group {
-    display: flex;
-    flex-direction: column; /* Stack groups vertically */
-    gap: 5px; /* Space between groups */
-}
-
-.phone-number-group .phone-number {
-    font-size: 14px;
-    color: #555;
-}
-
-.phone-number-group .phone-number-top {
-    color: #000; /* Color for the first 10 digits */
-}
-
-.phone-number-group .phone-number-bottom {
-    color: #333; /* Color for the remaining 10 digits */
-}
-
 .phone-icon {
-    position: absolute;
-    bottom: 10px;
-    left: 10px;
-    font-size: 20px;
-    color: #333;
-    cursor: pointer;
+    font-size: 16px; /* Adjust icon size */
+    color: #333; /* Color for the icon */
+    cursor: pointer; /* Pointer cursor on hover */
 }

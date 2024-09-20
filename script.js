@@ -1,10 +1,3 @@
-/**
- * Author: Ajay Singh
- * Version: 0.1
- * Date: 19-09-2024
- * Description: JavaScript for handling date display, date picker, data fetching, filtering, search functionality, and date navigation buttons.
- */
-
 document.addEventListener("DOMContentLoaded", function() {
     const url = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRT_ixy3nU4dbCgnMMyR05vP4dQePsnwZ4_UgCuP-x0XdcHVv9X87v6kYP-q2ouBk8UIaK8khj80FJ3/pub?gid=1138944004&single=true&output=csv';
     
@@ -17,7 +10,12 @@ document.addEventListener("DOMContentLoaded", function() {
             if (rows.length > 0) {
                 // Skip header row
                 rows.slice(1).forEach((row, index) => {
-                    const [company, place, customer, phone, project] = row.split(',');
+                    const columns = row.split(',');
+                    if (columns.length !== 5) {
+                        console.warn(`Skipping malformed row ${index + 1}: ${row}`);
+                        return; // Skip malformed rows
+                    }
+                    const [company, place, customer, phone, project] = columns;
 
                     const card = document.createElement('div');
                     card.className = 'card';
@@ -33,7 +31,7 @@ document.addEventListener("DOMContentLoaded", function() {
 
                     const cardNumber = document.createElement('div');
                     cardNumber.className = 'card-number';
-                    cardNumber.textContent = index + 1; // Display only the integer value
+                    cardNumber.textContent = index + 1; // Display the card number
 
                     const companyNameFront = document.createElement('div');
                     companyNameFront.className = 'company-name';
@@ -63,55 +61,27 @@ document.addEventListener("DOMContentLoaded", function() {
                     const phoneNumbersDiv = document.createElement('div');
                     phoneNumbersDiv.className = 'phone-numbers';
 
-                    const phoneNumbersGroup = document.createElement('div');
-                    phoneNumbersGroup.className = 'phone-number-group';
-
-                    // Handle phone numbers
-                    if (phone.length === 20 && phone[10] === ' ') {
-                        // Phone number is 20 digits with a space
-                        const firstGroup = phone.slice(0, 10).trim();
-                        const secondGroup = phone.slice(11).trim(); // Skip space
-
-                        const phoneNumberTop = document.createElement('div');
-                        phoneNumberTop.className = 'phone-number phone-number-top';
-                        phoneNumberTop.textContent = firstGroup;
-                        phoneNumberTop.addEventListener('click', () => {
-                            window.location.href = `tel:${firstGroup.trim()}`; // Call the phone number
-                        });
-
-                        const phoneNumberBottom = document.createElement('div');
-                        phoneNumberBottom.className = 'phone-number phone-number-bottom';
-                        phoneNumberBottom.textContent = secondGroup;
-                        phoneNumberBottom.addEventListener('click', () => {
-                            window.location.href = `tel:${secondGroup.trim()}`; // Call the phone number
-                        });
-
-                        phoneNumbersGroup.appendChild(phoneNumberTop);
-                        phoneNumbersGroup.appendChild(phoneNumberBottom);
-                    } else {
-                        // Regular case with multiple numbers separated by spaces or semicolons
-                        const phoneNumbers = phone.split(/[;\s]+/); // Split by semicolon or space
+                    // Handle phone numbers and add icons
+                    const phoneNumbers = phone.match(/\d{10}/g); // Find all groups of 10 digits
+                    if (phoneNumbers) {
                         phoneNumbers.forEach(num => {
-                            const phoneNumber = document.createElement('div');
-                            phoneNumber.className = 'phone-number';
-                            phoneNumber.textContent = num.trim(); // Display each phone number
-                            phoneNumber.addEventListener('click', () => {
-                                window.location.href = `tel:${num.trim()}`; // Call the phone number
+                            const phoneIcon = document.createElement('i');
+                            phoneIcon.className = 'fas fa-phone phone-icon'; // Use Font Awesome class
+                            phoneIcon.addEventListener('click', (event) => {
+                                event.stopPropagation(); // Prevent card flip on icon click
+                                if (confirm(`Do you want to call this number: ${num.trim()}?`)) {
+                                    window.location.href = `tel:${num.trim()}`; // Call the phone number
+                                } else {
+                                    card.classList.toggle('flipped'); // Flip back to original state
+                                }
                             });
-                            phoneNumbersGroup.appendChild(phoneNumber);
+
+                            // Add the icon to the group
+                            phoneNumbersDiv.appendChild(phoneIcon);
                         });
+                    } else {
+                        console.warn(`No valid phone numbers found for row ${index + 1}: ${phone}`);
                     }
-
-                    phoneNumbersDiv.appendChild(phoneNumbersGroup);
-
-                    const phoneIcon = document.createElement('i');
-                    phoneIcon.className = 'fas fa-phone phone-icon';
-                    phoneIcon.addEventListener('click', () => {
-                        const phoneNumber = phoneNumbersDiv.querySelector('.phone-number');
-                        if (phoneNumber) {
-                            window.location.href = `tel:${phoneNumber.textContent.trim()}`; // Call the first number
-                        }
-                    });
 
                     cardFront.appendChild(cardNumber);
                     cardFront.appendChild(companyNameFront);
@@ -122,7 +92,6 @@ document.addEventListener("DOMContentLoaded", function() {
                     cardBack.appendChild(projectDescriptionBack);
                     cardBack.appendChild(placeNameBack);
                     cardBack.appendChild(phoneNumbersDiv);
-                    cardBack.appendChild(phoneIcon);
 
                     cardInner.appendChild(cardFront);
                     cardInner.appendChild(cardBack);
@@ -136,5 +105,8 @@ document.addEventListener("DOMContentLoaded", function() {
                 });
             }
         })
-        .catch(error => console.error('Error fetching the CSV data:', error));
+        .catch(error => {
+            console.error('Error fetching the CSV data:', error);
+            document.getElementById('card-container').innerHTML = "<p>Error loading data. Please try again later.</p>";
+        });
 });
