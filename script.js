@@ -1,12 +1,21 @@
 document.addEventListener("DOMContentLoaded", function() {
     const url = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRT_ixy3nU4dbCgnMMyR05vP4dQePsnwZ4_UgCuP-x0XdcHVv9X87v6kYP-q2ouBk8UIaK8khj80FJ3/pub?gid=1138944004&single=true&output=csv';
     
+    const header = document.querySelector('header');
+    header.addEventListener('click', () => {
+        location.reload(); // Reloads the current page
+    });
+
     fetch(url)
         .then(response => response.text())
         .then(data => {
             const rows = data.split('\n').filter(row => row.trim() !== '');
             const container = document.getElementById('card-container');
             
+            let totalProjects = rows.length - 1; // Total projects excluding header
+            let cities = new Set();
+            let companies = new Set();
+
             if (rows.length > 0) {
                 // Skip header row
                 rows.slice(1).forEach((row, index) => {
@@ -16,6 +25,9 @@ document.addEventListener("DOMContentLoaded", function() {
                         return; // Skip malformed rows
                     }
                     const [company, place, customer, phone, project] = columns;
+
+                    companies.add(company.trim()); // Add company to the set
+                    cities.add(place.trim()); // Add city to the set
 
                     const card = document.createElement('div');
                     card.className = 'card';
@@ -103,6 +115,11 @@ document.addEventListener("DOMContentLoaded", function() {
 
                     container.appendChild(card);
                 });
+
+                // Update dashboard with counts
+                document.getElementById('projects-count').textContent = totalProjects;
+                document.getElementById('cities-count').textContent = cities.size; // Distinct cities
+                document.getElementById('companies-count').textContent = companies.size; // Distinct companies
             }
         })
         .catch(error => {
