@@ -1,16 +1,41 @@
+/* 
+  Author: Ajay Singh
+  Version: 1.0
+  Date: 21-09-2024
+  Description: CSS for the AEW application. Contains styles for layout, cards, and animations.
+*/
+
+/* AEW Theme */
+:root {
+    --primary-bg-color: #1c1c1c;
+    --header-bg-color: #fefffe;
+    --dashboard-bg-color: #262727;
+    --card-bg-color: #1c1c1c;
+    --text-color-light: #fefffe;
+    --text-color-highlight: #d73b23; /* Maintained original red */
+    --loading-bg-color: rgba(28, 28, 28, 0.8);
+    --loading-blur: blur(50px);
+    --shadow-light: 0 2px 10px rgba(0, 0, 0, 0.3);
+    --shadow-medium: 0 4px 12px rgba(0, 0, 0, 0.3);
+    --border-radius: 12px; /* Slightly increased for a softer look */
+    --transition-speed: 0.3s;
+}
+
 /* Global Styles */
-* {
+*,
+*::before,
+*::after {
     box-sizing: border-box;
     margin: 0;
     padding: 0;
-    transition: all 0.3s ease;
+    transition: all var(--transition-speed) ease;
 }
 
 body {
     font-family: 'Roboto', sans-serif;
-    padding: 20px;
-    background-color: #1c1c1c; /* Dark background */
-    color: #fefffe; /* Light text */
+    padding: 80px 20px 20px; /* Adjusted for header height */
+    background-color: var(--primary-bg-color);
+    color: var(--text-color-light);
 }
 
 /* Header Styling */
@@ -19,29 +44,37 @@ header {
     top: 0;
     left: 0;
     width: 100%;
-    background-color: #fefffe; /* White background for header */
-    padding: 20px;
-    border-bottom: none;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+    background-color: var(--header-bg-color);
+    padding: 15px;
+    box-shadow: var(--shadow-light);
     display: flex;
     justify-content: center;
     align-items: center;
     z-index: 1000;
 }
 
+header img {
+    transition: transform var(--transition-speed), filter var(--transition-speed);
+}
+
 header img#logo {
     position: absolute;
     left: 20px;
-    width: 120px; /* Adjust logo size */
+    width: 80px;
 }
 
 header img#header-title {
-    width: 200px; /* Centered SVG title */
+    width: 160px;
 }
 
-/* Adjust padding for body content */
-body {
-    padding-top: 100px; /* Avoid content hiding under header */
+header img#logo:hover {
+    transform: scale(1.1);
+    filter: brightness(1.2);
+}
+
+header img#header-title:hover {
+    filter: brightness(1.2);
+    transform: scale(1.05);
 }
 
 /* Dashboard Section Styling */
@@ -49,18 +82,47 @@ body {
     display: flex;
     justify-content: space-around;
     margin: 20px 0;
-    background-color: #262727; /* Darker background */
+    background-color: var(--dashboard-bg-color);
     padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-    animation: popUp 0.8s ease-in-out;
+    border-radius: var(--border-radius);
+    box-shadow: var(--shadow-light);
+    transition: background-color var(--transition-speed), transform var(--transition-speed);
+    flex-wrap: wrap;
+}
+
+#dashboard:hover {
+    background-color: rgba(255, 255, 255, 0.05);
+    transform: translateY(-3px);
 }
 
 #dashboard div {
+    flex: 1 1 200px;
+    margin: 10px;
+    padding: 15px;
     font-size: 18px;
     font-weight: bold;
-    color: #fefffe; /* Lighter text */
     text-align: center;
+    border-radius: var(--border-radius);
+    background-color: rgba(255, 255, 255, 0.15);
+    color: var(--text-color-light);
+    box-shadow: var(--shadow-medium);
+    transition: transform var(--transition-speed), box-shadow var(--transition-speed), background-color var(--transition-speed), color var(--transition-speed);
+}
+
+#dashboard div:hover,
+#dashboard div:active {
+    transform: scale(1.05);
+    box-shadow: 0 6px 30px rgba(0, 0, 0, 0.5);
+    background-color: var(--text-color-highlight);
+}
+
+/* Count Styles */
+#projects-count,
+#cities-count,
+#companies-count {
+    font-size: 24px;
+    color: var(--text-color-highlight);
+    transition: color var(--transition-speed);
 }
 
 /* Card Container Styling */
@@ -73,24 +135,22 @@ body {
 
 /* Card Styles */
 .card {
-    width: calc(25% - 20px); /* Adjusted for 4 cards per row */
+    flex: 1 1 250px;
+    max-width: 300px;
     height: 300px;
-    perspective: 1000px;
     position: relative;
     cursor: pointer;
-    background-color: #262727; /* Dark card background */
-    border-radius: 10px;
-    transition: transform 0.4s ease;
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    background-color: var(--card-bg-color);
+    border-radius: var(--border-radius);
+    transition: transform 0.4s ease, box-shadow var(--transition-speed);
+    box-shadow: var(--shadow-medium);
 }
 
-/* Card Hover Effect */
 .card:hover {
-    transform: scale(1.05); /* Subtle zoom on hover */
-    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.5);
+    transform: scale(1.05);
+    box-shadow: 0 6px 25px rgba(0, 0, 0, 0.5);
 }
 
-/* Flip Animation */
 .card-inner {
     width: 100%;
     height: 100%;
@@ -103,7 +163,6 @@ body {
     transform: rotateY(180deg);
 }
 
-/* Front and Back Face Styles */
 .card-face {
     position: absolute;
     width: 100%;
@@ -114,25 +173,21 @@ body {
     align-items: center;
     justify-content: center;
     text-align: center;
-    border-radius: 10px; /* Matching card border radius */
+    border-radius: var(--border-radius);
 }
 
-.card-face.front.combination1 {
-    background-color: #fefffe; /* Light background */
-    color: #262626; /* Dark text */
+.card-face.front {
+    background-color: var(--dashboard-bg-color);
 }
 
 .card-face.back {
-    background-color: #3a3a3a; /* New distinct dark back face color */
-    color: #fefffe;
+    background-color: #3a3a3a;
     transform: rotateY(180deg);
-    padding: 10px;
-    box-sizing: border-box;
 }
 
 /* Card Content Styling */
 .card-number {
-    font-size: 12px;
+    font-size: 16px;
     color: #888;
     position: absolute;
     top: 10px;
@@ -140,76 +195,85 @@ body {
 }
 
 .company-name {
-    font-size: 18px;
-    font-weight: bold; /* Bold company name */
-    color: #d73b23; /* Bright red for visibility */
-    margin-bottom: 10px;
+    font-size: 22px;
+    font-weight: bold;
+    color: var(--text-color-highlight);
+    margin: 10px 0;
+    transition: transform var(--transition-speed), color var(--transition-speed);
 }
 
-.customer-name, .project-description {
-    font-size: 14px;
-    color: #fefffe; /* Light text for readability */
+.company-name:hover {
+    color: var(--text-color-light);
+    transform: scale(1.05);
+}
+
+.customer-name,
+.project-description,
+.place-name {
+    font-size: 16px;
+    color: var(--text-color-light);
     margin-bottom: 5px;
     text-align: center;
 }
 
-/* Place Name on Flipped Cards */
-.place-name {
-    font-size: 14px;
-    color: #fefffe; /* Light color for text */
-    position: absolute;
-    bottom: 10px;
-    right: 10px; /* Moved to bottom-right on back */
-}
-
-/* Phone Icon and Numbers */
 .phone-numbers {
     position: absolute;
     bottom: 10px;
     left: 10px;
-    text-align: left;
     display: flex;
     flex-direction: column;
     gap: 5px;
 }
 
 .phone-icon {
-    font-size: 16px;
-    color: #fefffe; /* Light text for visibility */
+    font-size: 18px;
+    color: var(--text-color-light);
     cursor: pointer;
 }
 
-/* Media Query for Smaller Screens */
-@media (max-width: 768px) {
-    .card {
-        width: calc(50% - 20px); /* 2 cards per row */
+/* Responsive Styles */
+@media (max-width: 1024px) {
+    header img#logo {
+        width: 70px;
     }
+    header img#header-title {
+        width: 140px;
+    }
+}
 
+@media (max-width: 768px) {
     #dashboard {
         flex-direction: column;
+        align-items: stretch;
     }
 
-    header img#logo {
-        width: 80px;
+    #dashboard div {
+        flex: 1 1 auto;
+        width: 100%;
+        margin: 10px 0;
+        font-size: 16px;
     }
 
-    header img#header-title {
-        width: 150px;
+    .card {
+        flex: 1 1 100%;
+        max-width: none;
+    }
+
+    .company-name,
+    .card-number {
+        font-size: 18px;
+    }
+
+    .customer-name,
+    .project-description,
+    .place-name {
+        font-size: 14px;
+    }
+
+    .phone-icon {
+        font-size: 16px;
     }
 }
-
-/* Animations */
-@keyframes popUp {
-    0% {
-        transform: scale(0.9);
-        opacity: 0;
-    }
-    100% {
-        transform: scale(1);
-        opacity: 1;
-    }
-}
-
 
 /* Loading Screen Styles */
 #loading-screen {
@@ -218,19 +282,19 @@ body {
     left: 0;
     width: 100%;
     height: 100%;
-    background-color: rgba(28, 28, 28, 0.8); /* Semi-transparent dark background */
+    background-color: var(--loading-bg-color);
     display: flex;
     justify-content: center;
     align-items: center;
-    z-index: 2000; /* Higher than other content */
-    backdrop-filter: blur(5px); /* Blur background */
-    display: none; /* Hidden by default */
+    z-index: 2000;
+    backdrop-filter: var(--loading-blur);
+    display: none;
 }
 
 #loading-cog {
-    width: 50px; /* Adjust size */
-    height: 50px; /* Adjust size */
-    animation: rotate 1s linear infinite; /* Continuous rotation */
+    width: 50px;
+    height: 50px;
+    animation: rotate 1s linear infinite;
 }
 
 @keyframes rotate {

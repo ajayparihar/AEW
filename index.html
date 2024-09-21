@@ -1,3 +1,9 @@
+<!-- 
+  Author: Ajay Singh
+  Version: 1.0
+  Date: 21-09-2024
+  Description: HTML structure for the AEW application. Includes a header with the title, a dashboard section, and a card container.
+-->
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -31,12 +37,19 @@
     <div id="loading-screen">
         <img src="svg/AEW-COG.svg" alt="Loading" id="loading-cog">
     </div>
-    
-    
-    
-    
+
     <div id="card-container"></div>
 
-    <script src="script.js"></script>
+    <script src="script.js" type="module"></script>
+    <script>
+        // Add click event listeners for logo and header title to reload the page
+        document.getElementById('logo').addEventListener('click', () => {
+            location.reload();
+        });
+        
+        document.getElementById('header-title').addEventListener('click', () => {
+            location.reload();
+        });
+    </script>
 </body>
 </html>

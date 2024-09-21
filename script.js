@@ -1,135 +1,163 @@
-document.addEventListener("DOMContentLoaded", function() {
-    const url = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRT_ixy3nU4dbCgnMMyR05vP4dQePsnwZ4_UgCuP-x0XdcHVv9X87v6kYP-q2ouBk8UIaK8khj80FJ3/pub?gid=1138944004&single=true&output=csv';
+/* 
+  Author: Ajay Singh
+  Version: 1.0
+  Date: 21-09-2024
+  Description: JavaScript for the AEW application. Fetches project data from Google Sheets and updates the UI.
+*/
 
-    const header = document.querySelector('header');
-    header.addEventListener('click', () => {
-        location.reload(); // Reloads the current page
+// Constants
+const API_URL = 'https://docs.google.com/spreadsheets/d/e/2PACX-1vRT_ixy3nU4dbCgnMMyR05vP4dQePsnwZ4_UgCuP-x0XdcHVv9X87v6kYP-q2ouBk8UIaK8khj80FJ3/pub?gid=1138944004&single=true&output=csv';
+const NO_RECORDS_MESSAGE = 'Nothing to revise today. Enjoy your day!';
+const ERROR_MESSAGE = 'Error fetching the CSV data. Please try again later.';
+
+// DOM Elements
+const loadingScreen = document.getElementById('loading-screen');
+const cardContainer = document.getElementById('card-container');
+const projectCountDisplay = document.getElementById('projects-count');
+const citiesCountDisplay = document.getElementById('cities-count');
+const companiesCountDisplay = document.getElementById('companies-count');
+const logo = document.getElementById('logo');
+const headerTitle = document.getElementById('header-title');
+
+// Variables
+let totalProjects = 0;
+let cities = new Set();
+let companies = new Set();
+
+// Functions
+const showLoadingScreen = () => {
+    loadingScreen.style.display = 'flex';
+};
+
+const hideLoadingScreen = () => {
+    loadingScreen.style.display = 'none';
+};
+
+const updateDashboardCounts = () => {
+    projectCountDisplay.textContent = totalProjects;
+    citiesCountDisplay.textContent = cities.size;
+    companiesCountDisplay.textContent = companies.size;
+};
+
+const createCard = (index, company, place, customer, phone, project) => {
+    const card = document.createElement('div');
+    card.className = 'card';
+
+    const cardInner = document.createElement('div');
+    cardInner.className = 'card-inner';
+
+    const cardFront = document.createElement('div');
+    cardFront.className = 'card-face front';
+    cardFront.innerHTML = `
+        <div class="card-number">${index + 1}</div>
+        <div class="company-name">${company}</div>
+        <div class="place-name">${place}</div>
+    `;
+
+    const cardBack = document.createElement('div');
+    cardBack.className = 'card-face back';
+    cardBack.innerHTML = `
+        <div class="company-name">${company}</div>
+        <div class="customer-name">${customer.split(':').join('<br>')}</div>
+        <div class="project-description">${project}</div>
+        <div class="place-name">${place}</div>
+        ${createPhoneNumbers(phone)}
+    `;
+
+    cardInner.appendChild(cardFront);
+    cardInner.appendChild(cardBack);
+    card.appendChild(cardInner);
+
+    card.addEventListener('click', () => {
+        card.classList.toggle('flipped');
     });
 
-    const loadingScreen = document.getElementById('loading-screen');
-    loadingScreen.style.display = 'flex'; // Show loading screen
+    return card;
+};
 
-    fetch(url)
-        .then(response => response.text())
-        .then(data => {
-            const rows = data.split('\n').filter(row => row.trim() !== '');
-            const container = document.getElementById('card-container');
-            
-            let totalProjects = rows.length - 1; // Total projects excluding header
-            let cities = new Set();
-            let companies = new Set();
+const createPhoneNumbers = (phone) => {
+    const phoneNumbers = phone.match(/\d{10}/g);
+    if (!phoneNumbers) return '';
 
-            if (rows.length > 0) {
-                // Skip header row
-                rows.slice(1).forEach((row, index) => {
-                    const columns = row.split(',');
-                    if (columns.length !== 5) {
-                        console.warn(`Skipping malformed row ${index + 1}: ${row}`);
-                        return; // Skip malformed rows
-                    }
-                    const [company, place, customer, phone, project] = columns;
+    return `<div class="phone-numbers">
+        ${phoneNumbers.map(num => `
+            <i class="fas fa-phone phone-icon" data-number="${num.trim()}"></i>
+        `).join('')}
+    </div>`;
+};
 
-                    companies.add(company.trim()); // Add company to the set
-                    cities.add(place.trim()); // Add city to the set
-
-                    const card = document.createElement('div');
-                    card.className = 'card';
-
-                    const cardInner = document.createElement('div');
-                    cardInner.className = 'card-inner';
-
-                    const cardFront = document.createElement('div');
-                    cardFront.className = 'card-face front';
-
-                    const cardBack = document.createElement('div');
-                    cardBack.className = 'card-face back';
-
-                    const cardNumber = document.createElement('div');
-                    cardNumber.className = 'card-number';
-                    cardNumber.textContent = index + 1; // Display the card number
-
-                    const companyNameFront = document.createElement('div');
-                    companyNameFront.className = 'company-name';
-                    companyNameFront.textContent = company;
-
-                    const companyNameBack = document.createElement('div');
-                    companyNameBack.className = 'company-name';
-                    companyNameBack.textContent = company;
-
-                    const placeNameFront = document.createElement('div');
-                    placeNameFront.className = 'place-name';
-                    placeNameFront.textContent = place;
-
-                    const placeNameBack = document.createElement('div');
-                    placeNameBack.className = 'place-name';
-                    placeNameBack.textContent = place;
-
-                    const customerNames = customer.split(':');
-                    const customerNameBack = document.createElement('div');
-                    customerNameBack.className = 'customer-name';
-                    customerNameBack.innerHTML = customerNames.join('<br>'); // Display names one below the other
-
-                    const projectDescriptionBack = document.createElement('div');
-                    projectDescriptionBack.className = 'project-description';
-                    projectDescriptionBack.textContent = project;
-
-                    const phoneNumbersDiv = document.createElement('div');
-                    phoneNumbersDiv.className = 'phone-numbers';
-
-                    // Handle phone numbers and add icons
-                    const phoneNumbers = phone.match(/\d{10}/g); // Find all groups of 10 digits
-                    if (phoneNumbers) {
-                        phoneNumbers.forEach(num => {
-                            const phoneIcon = document.createElement('i');
-                            phoneIcon.className = 'fas fa-phone phone-icon'; // Use Font Awesome class
-                            phoneIcon.addEventListener('click', (event) => {
-                                event.stopPropagation(); // Prevent card flip on icon click
-                                if (confirm(`Do you want to call this number: ${num.trim()}?`)) {
-                                    window.location.href = `tel:${num.trim()}`; // Call the phone number
-                                } else {
-                                    card.classList.toggle('flipped'); // Flip back to original state
-                                }
-                            });
-
-                            // Add the icon to the group
-                            phoneNumbersDiv.appendChild(phoneIcon);
-                        });
-                    } else {
-                        console.warn(`No valid phone numbers found for row ${index + 1}: ${phone}`);
-                    }
-
-                    cardFront.appendChild(cardNumber);
-                    cardFront.appendChild(companyNameFront);
-                    cardFront.appendChild(placeNameFront);
-
-                    cardBack.appendChild(companyNameBack);
-                    cardBack.appendChild(customerNameBack);
-                    cardBack.appendChild(projectDescriptionBack);
-                    cardBack.appendChild(placeNameBack);
-                    cardBack.appendChild(phoneNumbersDiv);
-
-                    cardInner.appendChild(cardFront);
-                    cardInner.appendChild(cardBack);
-                    card.appendChild(cardInner);
-
-                    card.addEventListener('click', () => {
-                        card.classList.toggle('flipped');
-                    });
-
-                    container.appendChild(card);
-                });
-
-                // Update dashboard with counts
-                document.getElementById('projects-count').textContent = totalProjects;
-                document.getElementById('cities-count').textContent = cities.size; // Distinct cities
-                document.getElementById('companies-count').textContent = companies.size; // Distinct companies
+const attachPhoneClickListeners = () => {
+    const phoneIcons = document.querySelectorAll('.phone-icon');
+    phoneIcons.forEach(icon => {
+        icon.addEventListener('click', (event) => {
+            const number = event.target.getAttribute('data-number');
+            if (confirm(`Do you want to call this number: ${number}?`)) {
+                window.location.href = `tel:${number}`;
             }
-        })
-        .catch(error => {
-            console.error('Error fetching the CSV data:', error);
-            document.getElementById('card-container').innerHTML = "<p>Error loading data. Please try again later.</p>";
-        })
-        .finally(() => {
-            loadingScreen.style.display = 'none'; // Hide loading screen
+            event.stopPropagation(); // Prevent card flip
         });
+    });
+};
+
+const fetchCSVData = async () => {
+    showLoadingScreen();
+    try {
+        const response = await fetch(API_URL);
+        
+        // Check if the response is ok (status in the range 200-299)
+        if (!response.ok) {
+            throw new Error(`HTTP error! Status: ${response.status}`);
+        }
+        
+        const data = await response.text();
+        processCSVData(data);
+    } catch (error) {
+        console.error('Fetch error:', error); // Log detailed error
+        cardContainer.innerHTML = `<p>${ERROR_MESSAGE}</p>`;
+    } finally {
+        hideLoadingScreen();
+    }
+};
+
+const processCSVData = (data) => {
+    console.log('CSV Data:', data); // Log the raw CSV data
+    const rows = data.split('\n').filter(row => row.trim() !== '').slice(1); // Skip header
+    totalProjects = rows.length;
+    cardContainer.innerHTML = ''; // Clear existing cards
+
+    if (totalProjects === 0) {
+        cardContainer.innerHTML = `<p>${NO_RECORDS_MESSAGE}</p>`;
+        return;
+    }
+
+    rows.forEach((row, index) => {
+        const columns = row.split(',');
+        if (columns.length === 5) {
+            const [company, place, customer, phone, project] = columns.map(col => col.trim());
+            companies.add(company);
+            cities.add(place);
+
+            const card = createCard(index, company, place, customer, phone, project);
+            cardContainer.appendChild(card);
+        } else {
+            console.warn(`Skipping malformed row ${index + 1}: ${row}`);
+        }
+    });
+
+    updateDashboardCounts();
+    attachPhoneClickListeners(); // Attach listeners after creating cards
+};
+
+// Initialize
+document.addEventListener("DOMContentLoaded", () => {
+    fetchCSVData();
+
+    // Add click event listeners for logo and header title
+    logo.addEventListener('click', () => {
+        location.reload();
+    });
+
+    headerTitle.addEventListener('click', () => {
+        location.reload();
+    });
 });
