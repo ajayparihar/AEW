@@ -15,7 +15,7 @@
     --text-color-dark: #262626;
     --text-color-highlight: #d73b23; /* Maintained original red */
     --loading-bg-color: rgba(28, 28, 28, 0.8);
-    --loading-blur: blur(50px);
+    --loading-blur: blur(500px);
     --shadow-light: 0 2px 10px rgba(0, 0, 0, 0.3);
     --shadow-medium: 0 4px 12px rgba(0, 0, 0, 0.3);
     --border-radius: 12px; /* Slightly increased for a softer look */
