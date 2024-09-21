@@ -1,8 +1,8 @@
 /* 
   Author: Ajay Singh
-  Version: 1.0
+  Version: 1.1
   Date: 21-09-2024
-  Description: CSS for the AEW application. Contains styles for layout, cards, and animations.
+  Description: Enhanced CSS for the AEW application with improved visuals and responsiveness.
 */
 
 /* AEW Theme */
@@ -12,6 +12,7 @@
     --dashboard-bg-color: #262727;
     --card-bg-color: #1c1c1c;
     --text-color-light: #fefffe;
+    --text-color-dark: #262626;
     --text-color-highlight: #d73b23; /* Maintained original red */
     --loading-bg-color: rgba(28, 28, 28, 0.8);
     --loading-blur: blur(50px);
@@ -33,9 +34,11 @@
 
 body {
     font-family: 'Roboto', sans-serif;
-    padding: 80px 20px 20px; /* Adjusted for header height */
+    padding: 20px;
+    padding-top: 80px; /* Adjusted for header height */
     background-color: var(--primary-bg-color);
     color: var(--text-color-light);
+    line-height: 1.6; /* Improved readability */
 }
 
 /* Header Styling */
@@ -48,33 +51,34 @@ header {
     padding: 15px;
     box-shadow: var(--shadow-light);
     display: flex;
-    justify-content: center;
+    justify-content: center; /* Center content horizontally */
     align-items: center;
     z-index: 1000;
 }
 
-header img {
+header img#logo {
+    position: absolute;
+    left: 20px; /* Keep logo fixed to the left */
+    width: 80px; /* Adjusted size */
     transition: transform var(--transition-speed), filter var(--transition-speed);
 }
 
-header img#logo {
-    position: absolute;
-    left: 20px;
-    width: 80px;
-}
-
 header img#header-title {
-    width: 160px;
+    width: 160px; /* Adjusted size */
+    margin: 0 20px; /* Add margin for spacing */
 }
 
+
+/* Logo Hover Effect */
 header img#logo:hover {
     transform: scale(1.1);
     filter: brightness(1.2);
 }
 
+/* Header Title Hover Effect */
 header img#header-title:hover {
     filter: brightness(1.2);
-    transform: scale(1.05);
+    transform: scale(1.05); /* Slightly enlarge on hover */
 }
 
 /* Dashboard Section Styling */
@@ -87,42 +91,53 @@ header img#header-title:hover {
     border-radius: var(--border-radius);
     box-shadow: var(--shadow-light);
     transition: background-color var(--transition-speed), transform var(--transition-speed);
-    flex-wrap: wrap;
+    flex-wrap: wrap; /* Allow items to wrap for better responsiveness */
 }
 
+/* Dashboard Hover Effect */
 #dashboard:hover {
-    background-color: rgba(255, 255, 255, 0.05);
-    transform: translateY(-3px);
+    background-color: rgba(255, 255, 255, 0.05); /* Slightly lighter on hover */
+    transform: translateY(-3px); /* Less pronounced lift */
 }
 
+/* Dashboard Item Styles */
 #dashboard div {
-    flex: 1 1 200px;
-    margin: 10px;
-    padding: 15px;
-    font-size: 18px;
+    flex: 1 1 250px; /* Allow flexibility in size, with a minimum width */
+    margin: 10px; /* Added margin for spacing */
+    font-size: 1.2rem; /* Responsive font size */
     font-weight: bold;
-    text-align: center;
-    border-radius: var(--border-radius);
-    background-color: rgba(255, 255, 255, 0.15);
     color: var(--text-color-light);
+    text-align: center;
+    padding: 15px;
+    border-radius: var(--border-radius);
+    background-color: rgba(255, 255, 255, 0.15); /* Increased opacity for better visibility */
     box-shadow: var(--shadow-medium);
     transition: transform var(--transition-speed), box-shadow var(--transition-speed), background-color var(--transition-speed), color var(--transition-speed);
 }
 
+/* Dashboard Item Hover and Click Effect */
 #dashboard div:hover,
 #dashboard div:active {
     transform: scale(1.05);
     box-shadow: 0 6px 30px rgba(0, 0, 0, 0.5);
     background-color: var(--text-color-highlight);
+    color: var(--text-color-light); /* Change text color to light */
 }
 
-/* Count Styles */
+/* Change color of count elements on hover */
+#dashboard div:hover #projects-count,
+#dashboard div:hover #cities-count,
+#dashboard div:hover #companies-count {
+    color: var(--text-color-light); /* Change color to the same as text color */
+}
+
+/* Dashboard Count Styles */
 #projects-count,
 #cities-count,
 #companies-count {
-    font-size: 24px;
-    color: var(--text-color-highlight);
-    transition: color var(--transition-speed);
+    font-size: 1.5rem; /* Responsive font size */
+    color: var(--text-color-highlight); /* Changed color to highlight */
+    transition: color var(--transition-speed); /* Add transition for color change */
 }
 
 /* Card Container Styling */
@@ -135,9 +150,10 @@ header img#header-title:hover {
 
 /* Card Styles */
 .card {
-    flex: 1 1 250px;
-    max-width: 300px;
+    flex: 1 1 250px; /* Allow cards to be flexible */
+    max-width: 300px; /* Limit maximum width for better layout */
     height: 300px;
+    perspective: 1000px;
     position: relative;
     cursor: pointer;
     background-color: var(--card-bg-color);
@@ -146,11 +162,13 @@ header img#header-title:hover {
     box-shadow: var(--shadow-medium);
 }
 
+/* Card Hover Effect */
 .card:hover {
     transform: scale(1.05);
     box-shadow: 0 6px 25px rgba(0, 0, 0, 0.5);
 }
 
+/* Flip Animation */
 .card-inner {
     width: 100%;
     height: 100%;
@@ -163,6 +181,7 @@ header img#header-title:hover {
     transform: rotateY(180deg);
 }
 
+/* Front and Back Face Styles */
 .card-face {
     position: absolute;
     width: 100%;
@@ -176,18 +195,24 @@ header img#header-title:hover {
     border-radius: var(--border-radius);
 }
 
+/* Card Front Face Styles */
 .card-face.front {
     background-color: var(--dashboard-bg-color);
+    color: var(--text-color-light);
 }
 
+/* Back Face Styles */
 .card-face.back {
     background-color: #3a3a3a;
+    color: var(--text-color-light);
     transform: rotateY(180deg);
+    padding: 10px;
+    box-sizing: border-box;
 }
 
 /* Card Content Styling */
 .card-number {
-    font-size: 16px;
+    font-size: 1rem; /* Responsive font size */
     color: #888;
     position: absolute;
     top: 10px;
@@ -195,38 +220,48 @@ header img#header-title:hover {
 }
 
 .company-name {
-    font-size: 22px;
+    font-size: 1.5rem; /* Responsive font size */
     font-weight: bold;
     color: var(--text-color-highlight);
-    margin: 10px 0;
+    margin: 10px 0; /* Adjusted margin for better spacing */
     transition: transform var(--transition-speed), color var(--transition-speed);
 }
 
 .company-name:hover {
-    color: var(--text-color-light);
-    transform: scale(1.05);
+    color: var(--text-color-light); /* Change color on hover */
+    transform: scale(1.05); /* Slightly enlarge on hover */
 }
 
 .customer-name,
-.project-description,
-.place-name {
-    font-size: 16px;
+.project-description {
+    font-size: 1rem; /* Responsive font size */
     color: var(--text-color-light);
     margin-bottom: 5px;
     text-align: center;
 }
 
+/* Place Name on Flipped Cards */
+.place-name {
+    font-size: 1rem; /* Responsive font size */
+    color: var(--text-color-light);
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+}
+
+/* Phone Icon and Numbers */
 .phone-numbers {
     position: absolute;
     bottom: 10px;
     left: 10px;
+    text-align: left;
     display: flex;
     flex-direction: column;
     gap: 5px;
 }
 
 .phone-icon {
-    font-size: 18px;
+    font-size: 1rem; /* Responsive font size */
     color: var(--text-color-light);
     cursor: pointer;
 }
@@ -234,44 +269,44 @@ header img#header-title:hover {
 /* Responsive Styles */
 @media (max-width: 1024px) {
     header img#logo {
-        width: 70px;
+        width: 70px; /* Smaller logo size for medium screens */
     }
     header img#header-title {
-        width: 140px;
+        width: 140px; /* Smaller header title size for medium screens */
+    }
+
+    #dashboard div {
+        font-size: 1rem; /* Slightly smaller font size for medium screens */
     }
 }
 
 @media (max-width: 768px) {
     #dashboard {
-        flex-direction: column;
-        align-items: stretch;
+        flex-direction: column; /* Stack items vertically */
+        align-items: stretch; /* Stretch items to take full width */
     }
 
     #dashboard div {
-        flex: 1 1 auto;
-        width: 100%;
-        margin: 10px 0;
-        font-size: 16px;
+        flex: 1 1 auto; /* Allow dashboard items to take full width */
+        width: 100%; /* Set width to 100% */
+        margin: 10px 0; /* Adjusted margin for better spacing */
+        padding: 15px; /* Adjusted padding */
+        font-size: 0.9rem; /* Smaller font size */
     }
 
     .card {
-        flex: 1 1 100%;
-        max-width: none;
+        flex: 1 1 100%; /* Full width for cards on small screens */
+        max-width: none; /* Remove max-width constraint */
     }
 
-    .company-name,
-    .card-number {
-        font-size: 18px;
-    }
-
+    .card-number,
     .customer-name,
     .project-description,
     .place-name {
-        font-size: 14px;
+        font-size: 0.9rem; /* Smaller text for mobile screens */
     }
-
-    .phone-icon {
-        font-size: 16px;
+    .company-name {
+        font-size: 1.5rem;
     }
 }
 
@@ -288,7 +323,7 @@ header img#header-title:hover {
     align-items: center;
     z-index: 2000;
     backdrop-filter: var(--loading-blur);
-    display: none;
+    display: none; /* Ensure the loading screen is hidden by default */
 }
 
 #loading-cog {
