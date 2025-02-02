@@ -7,19 +7,36 @@
 
 /* AEW Theme */
 :root {
-    --primary-bg-color: #1c1c1c;
-    --header-bg-color: #fefffe;
-    --dashboard-bg-color: #262727;
-    --card-bg-color: #1c1c1c;
-    --text-color-light: #fefffe;
-    --text-color-dark: #262626;
-    --text-color-highlight: #d73b23; /* Maintained original red */
-    --loading-bg-color: rgba(28, 28, 28, 0.8);
-    --loading-blur: blur(500px);
-    --shadow-light: 0 2px 10px rgba(0, 0, 0, 0.3);
+    /* Primary Colors */
+    --primary-bg-color: #121212;
+    --header-bg-color: #ffffff;
+    --dashboard-bg-color: #1e1e1e;
+    --card-bg-color: #1e1e1e;
+    
+    /* Text Colors */
+    --text-color-light: #ffffff;
+    --text-color-dark: #121212;
+    --text-color-highlight: #d73b23;
+    --text-color-secondary: rgba(255, 255, 255, 0.7);
+    
+    /* Overlay Colors */
+    --loading-bg-color: rgba(18, 18, 18, 0.9);
+    --card-overlay: rgba(255, 255, 255, 0.1);
+    --hover-overlay: rgba(255, 255, 255, 0.15);
+    
+    /* Effects */
+    --loading-blur: blur(8px);
+    --shadow-light: 0 2px 8px rgba(0, 0, 0, 0.2);
     --shadow-medium: 0 4px 12px rgba(0, 0, 0, 0.3);
-    --border-radius: 12px; /* Slightly increased for a softer look */
-    --transition-speed: 0.3s;
+    --card-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    --hover-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+    
+    /* Border Radius */
+    --border-radius: 12px;
+    --border-radius-sm: 8px;
+    
+    /* Transitions */
+    --transition-speed: 0.2s;
     --font-size-sm: 0.9rem;
     --font-size-base: 1rem;
     --font-size-md: 1.2rem;
@@ -55,63 +72,83 @@ header {
     top: 0;
     left: 0;
     width: 100%;
+    height: 60px;
     background-color: var(--header-bg-color);
-    padding: 15px;
+    padding: var(--spacing-sm);
     box-shadow: var(--shadow-light);
     display: flex;
-    justify-content: center; /* Center content horizontally */
+    justify-content: center;
     align-items: center;
     z-index: 1000;
 }
 
-header img#logo {
+.logo-container {
     position: absolute;
-    left: 20px; /* Keep logo fixed to the left */
-    width: 60px; /* Smaller size for mobile */
+    left: var(--spacing-md);
+    height: 100%;
+    display: flex;
+    align-items: center;
+}
+
+.title-container {
+    height: 100%;
+    display: flex;
+    align-items: center;
+}
+
+header img#logo {
+    height: 40px;
+    width: auto;
     transition: transform var(--transition-speed), filter var(--transition-speed);
 }
 
 header img#header-title {
-    width: 120px; /* Smaller size for mobile */
-    margin: 0 10px; /* Reduced margin for mobile */
+    height: 30px;
+    width: auto;
 }
 
-/* Logo Hover Effect */
-header img#logo:hover {
-    transform: scale(1.1);
-    filter: brightness(1.2);
-}
-
-/* Header Title Hover Effect */
+/* Logo and Header Hover Effects */
+header img#logo:hover,
 header img#header-title:hover {
-    filter: brightness(1.2);
-    transform: scale(1.05); /* Slightly enlarge on hover */
+    filter: brightness(1.05);
+    transform: translateY(-1px);
 }
 
 /* Dashboard Section Styling */
 #dashboard {
     display: flex;
-    flex-direction: column; /* Stack items vertically on mobile */
-    gap: var(--spacing-sm); /* Add spacing between items */
+    flex-direction: column;
+    gap: var(--spacing-sm);
     margin: var(--spacing-lg) 0;
     background-color: var(--dashboard-bg-color);
     padding: var(--spacing-md);
     border-radius: var(--border-radius);
     box-shadow: var(--shadow-light);
+    overflow-x: auto; /* Enable horizontal scrolling if needed */
+    -webkit-overflow-scrolling: touch; /* Smooth scrolling on iOS */
 }
 
 /* Dashboard Item Styles */
 #dashboard div {
     flex: 1;
-    font-size: var(--font-size-base); /* Base font size */
+    min-width: 150px;
+    font-size: var(--font-size-base);
     font-weight: bold;
     color: var(--text-color-light);
     text-align: center;
     padding: var(--spacing-sm);
     border-radius: var(--border-radius);
-    background-color: rgba(255, 255, 255, 0.15); /* Increased opacity for better visibility */
-    box-shadow: var(--shadow-medium);
-    transition: transform var(--transition-speed), box-shadow var(--transition-speed), background-color var(--transition-speed), color var(--transition-speed);
+    background-color: var(--card-bg-color);
+    border: 1px solid var(--card-overlay);
+    box-shadow: var(--shadow-light);
+    transition: transform 0.2s ease, filter 0.2s ease;
+    white-space: nowrap;
+}
+
+/* Dashboard Hover Effect */
+#dashboard div:hover {
+    background-color: var(--hover-overlay);
+    box-shadow: var(--hover-shadow);
 }
 
 /* Dashboard Count Styles */
@@ -133,15 +170,23 @@ header img#header-title:hover {
 
 /* Card Styles */
 .card {
-    width: 100%; /* Full width for mobile */
-    height: 250px; /* Reduced height for mobile */
+    width: 100%;
+    height: 250px;
     perspective: 1000px;
     position: relative;
     cursor: pointer;
     background-color: var(--card-bg-color);
     border-radius: var(--border-radius);
-    transition: transform 0.4s ease, box-shadow var(--transition-speed);
-    box-shadow: var(--shadow-medium);
+    border: 2px solid transparent; /* Changed from 1px to 2px and made transparent */
+    transition: all 0.2s ease-out;
+    box-shadow: var(--shadow-light);
+}
+
+/* Card Hover Effect */
+.card:hover {
+    border-color: var(--text-color-highlight); /* Only change the border color */
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(215, 59, 35, 0.15);
 }
 
 /* Flip Animation */
@@ -150,7 +195,7 @@ header img#header-title:hover {
     height: 100%;
     position: relative;
     transform-style: preserve-3d;
-    transition: transform 0.6s ease;
+    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .card.flipped .card-inner {
@@ -174,13 +219,15 @@ header img#header-title:hover {
 
 /* Card Front Face Styles */
 .card-face.front {
-    background-color: var(--dashboard-bg-color);
+    background-color: var(--card-bg-color);
+    border: none;
     color: var(--text-color-light);
 }
 
 /* Back Face Styles */
 .card-face.back {
-    background-color: #3a3a3a;
+    background-color: var(--dashboard-bg-color);
+    border: none;
     color: var(--text-color-light);
     transform: rotateY(180deg);
 }
@@ -198,15 +245,16 @@ header img#header-title:hover {
 
 .phone-icon {
     font-size: var(--font-size-base);
-    color: var(--text-color-light);
+    color: var(--text-color-secondary);
     cursor: pointer;
-    transition: color var(--transition-speed);
+    transition: color 0.2s ease, opacity 0.2s ease;
     padding: var(--spacing-xs);
 }
 
 .phone-icon:hover {
     color: var(--text-color-highlight);
-    transform: scale(1.02); /* Reduced scale effect */
+    opacity: 0.9;
+    transform: none;
 }
 
 /* Loading Screen Styles */
@@ -228,7 +276,7 @@ header img#header-title:hover {
 #loading-cog {
     width: 40px;
     height: 40px;
-    animation: rotate 1.2s linear infinite;
+    animation: rotate 1s cubic-bezier(0.4, 0, 0.2, 1) infinite;
 }
 
 @keyframes rotate {
@@ -246,8 +294,33 @@ header img#header-title:hover {
     transition: transform 0.2s;
 }
 
+/* Fade In Animation */
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(2px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+/* Apply Animations */
+#dashboard div,
+.card {
+    animation: fadeIn 0.3s ease-out forwards;
+    animation-fill-mode: both;
+}
+
+/* Stagger dashboard items */
+#dashboard div:nth-child(1) { animation-delay: 0.1s; }
+#dashboard div:nth-child(2) { animation-delay: 0.2s; }
+#dashboard div:nth-child(3) { animation-delay: 0.3s; }
+
+/* Remove all scale transforms from clickable elements */
 .clickable:hover {
-    transform: scale(1.02); /* Reduced scale effect */
+    transform: translateY(-1px);
 }
 
 /* Responsive Styles for Mobile */
@@ -257,13 +330,16 @@ header img#header-title:hover {
         padding-top: 70px;
     }
 
+    header {
+        height: 50px;
+    }
+
     header img#logo {
-        width: 45px;
-        left: var(--spacing-sm);
+        height: 35px;
     }
 
     header img#header-title {
-        width: 90px;
+        height: 25px;
     }
 
     #dashboard {
@@ -297,6 +373,18 @@ header img#header-title:hover {
     .card-number {
         font-size: var(--font-size-xs);
     }
+
+    .logo-fallback {
+        font-size: var(--font-size-md);
+    }
+    
+    .title-fallback {
+        font-size: var(--font-size-base);
+    }
+
+    .logo-container {
+        left: var(--spacing-sm);
+    }
 }
 
 /* Responsive Styles for Large Screens */
@@ -304,11 +392,11 @@ header img#header-title:hover {
     #dashboard {
         flex-direction: row;
         gap: var(--spacing-md);
+        overflow: visible; /* Remove scrolling on larger screens */
     }
 
     #dashboard div {
-        font-size: var(--font-size-base);
-        padding: var(--spacing-md);
+        min-width: unset; /* Reset minimum width */
     }
 
     .card {
@@ -333,42 +421,20 @@ header img#header-title:hover {
     }
 }
 
-/* Subtle Animations */
-@keyframes fadeIn {
-    0% {
-        opacity: 0;
-        transform: translateY(5px);
-    }
-    100% {
-        opacity: 1;
-        transform: translateY(0);
-    }
+/* Company Name Hover */
+.company-name {
+    transition: color 0.2s ease;
 }
 
-/* Apply Animations */
-#dashboard div,
-.card {
-    animation: fadeIn 0.4s ease-out;
-}
-
-/* Hover Effects */
-#dashboard div:hover {
-    transform: translateY(-2px);
-    background-color: rgba(255, 255, 255, 0.12);
-}
-
-/* Smooth Transitions */
-button,
-.card,
-.phone-icon,
-#dashboard div {
-    transition: all 0.25s ease-out;
+.company-name:hover {
+    color: var(--text-color-highlight);
+    transform: none;
 }
 
 /* Card Number Styling */
 .card-number {
     font-size: 0.9rem; /* Smaller font size for subtlety */
-    color: rgba(255, 255, 255, 0.7); /* Subtle color */
+    color: var(--text-color-secondary);
     position: absolute;
     top: 10px; /* Position at the top */
     left: 10px; /* Position at the left */
@@ -377,7 +443,7 @@ button,
 /* Place Name Styling */
 .place-name {
     font-size: var(--font-size-sm); /* Small font size */
-    color: rgba(255, 255, 255, 0.7); /* Subtle color */
+    color: var(--text-color-secondary);
     position: absolute;
     bottom: var(--spacing-sm); /* Position at the bottom */
     right: var(--spacing-sm); /* Position at the right */
@@ -390,4 +456,34 @@ button,
     color: var(--text-color-highlight); /* Project red color */
     margin: var(--spacing-sm) 0;
     transition: transform var(--transition-speed), color var(--transition-speed);
+}
+
+/* Header SVG Fallback Styles */
+.logo-fallback,
+.title-fallback {
+    display: none;
+    font-family: 'Roboto', sans-serif;
+    font-weight: bold;
+    color: var(--text-color-dark);
+    font-size: var(--font-size-md);
+}
+
+/* Show fallback text if image fails to load */
+img#logo:not([src]),
+img#logo[src=""],
+img#logo[src="svg/aew-full_logo.svg"]:not(:loaded),
+img#header-title:not([src]),
+img#header-title[src=""],
+img#header-title[src="svg/AEW.svg"]:not(:loaded) {
+    display: none;
+}
+
+img#logo:not([src]) + .logo-fallback,
+img#logo[src=""] + .logo-fallback,
+img#logo[src="svg/aew-full_logo.svg"]:not(:loaded) + .logo-fallback,
+img#header-title:not([src]) + .title-fallback,
+img#header-title[src=""] + .title-fallback,
+img#header-title[src="svg/AEW.svg"]:not(:loaded) + .title-fallback {
+    display: block;
+    font-size: var(--font-size-lg);
 }
