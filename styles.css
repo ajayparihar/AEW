@@ -92,10 +92,10 @@ header img#header-title:hover {
 #dashboard {
     display: flex;
     flex-direction: column; /* Stack items vertically on mobile */
-    gap: 10px; /* Add spacing between items */
-    margin: 20px 0;
+    gap: var(--spacing-sm); /* Add spacing between items */
+    margin: var(--spacing-lg) 0;
     background-color: var(--dashboard-bg-color);
-    padding: 15px;
+    padding: var(--spacing-md);
     border-radius: var(--border-radius);
     box-shadow: var(--shadow-light);
 }
@@ -103,11 +103,11 @@ header img#header-title:hover {
 /* Dashboard Item Styles */
 #dashboard div {
     flex: 1;
-    font-size: var(--font-size-sm); /* Small font size */
+    font-size: var(--font-size-base); /* Base font size */
     font-weight: bold;
     color: var(--text-color-light);
     text-align: center;
-    padding: 10px;
+    padding: var(--spacing-sm);
     border-radius: var(--border-radius);
     background-color: rgba(255, 255, 255, 0.15); /* Increased opacity for better visibility */
     box-shadow: var(--shadow-medium);
@@ -118,7 +118,7 @@ header img#header-title:hover {
 #projects-count,
 #cities-count,
 #companies-count {
-    font-size: 1.2rem; /* Smaller font size for mobile */
+    font-size: var(--font-size-md); /* Medium font size */
     color: var(--text-color-highlight); /* Changed color to highlight */
     transition: color var(--transition-speed); /* Add transition for color change */
 }
@@ -197,15 +197,16 @@ header img#header-title:hover {
 }
 
 .phone-icon {
-    font-size: var(--font-size-base); /* Base font size */
+    font-size: var(--font-size-base);
     color: var(--text-color-light);
     cursor: pointer;
     transition: color var(--transition-speed);
+    padding: var(--spacing-xs);
 }
 
 .phone-icon:hover {
     color: var(--text-color-highlight);
-    transform: scale(1.1);
+    transform: scale(1.02); /* Reduced scale effect */
 }
 
 /* Loading Screen Styles */
@@ -221,13 +222,13 @@ header img#header-title:hover {
     align-items: center;
     z-index: 2000;
     backdrop-filter: var(--loading-blur);
-    display: none; /* Ensure the loading screen is hidden by default */
+    display: none;
 }
 
 #loading-cog {
-    width: 50px;
-    height: 50px;
-    animation: rotate 1s linear infinite;
+    width: 40px;
+    height: 40px;
+    animation: rotate 1.2s linear infinite;
 }
 
 @keyframes rotate {
@@ -246,85 +247,89 @@ header img#header-title:hover {
 }
 
 .clickable:hover {
-    transform: scale(1.05);
+    transform: scale(1.02); /* Reduced scale effect */
 }
 
 /* Responsive Styles for Mobile */
 @media (max-width: 768px) {
     body {
         padding: var(--spacing-sm);
-        padding-top: 70px; /* Adjusted for smaller header */
+        padding-top: 70px;
     }
 
     header img#logo {
-        width: 50px; /* Smaller logo for mobile */
+        width: 45px;
+        left: var(--spacing-sm);
     }
 
     header img#header-title {
-        width: 100px; /* Smaller header title for mobile */
+        width: 90px;
     }
 
     #dashboard {
-        padding: var(--spacing-sm); /* Reduced padding for mobile */
+        padding: var(--spacing-sm);
+        margin: var(--spacing-sm) 0;
     }
 
     #dashboard div {
-        font-size: var(--font-size-sm); /* Smaller font size for mobile */
+        font-size: var(--font-size-sm);
+        padding: var(--spacing-sm);
     }
 
     .card {
-        height: 200px; /* Reduced height for mobile */
+        height: 180px;
     }
 
     .card-face {
-        padding: var(--spacing-sm); /* Reduced padding for mobile */
+        padding: var(--spacing-sm);
     }
 
     .company-name {
-        font-size: var(--font-size-md); /* Smaller font size for mobile */
+        font-size: var(--font-size-base);
     }
 
     .customer-name,
     .project-description {
-        font-size: var(--font-size-sm); /* Smaller font size for mobile */
+        font-size: var(--font-size-sm);
     }
 
-    .place-name {
-        font-size: var(--font-size-sm); /* Smaller font size for mobile */
+    .place-name,
+    .card-number {
+        font-size: var(--font-size-xs);
     }
 }
 
 /* Responsive Styles for Large Screens */
 @media (min-width: 1024px) {
     #dashboard {
-        flex-direction: row; /* Align items horizontally on large screens */
-        gap: var(--spacing-md); /* Increase spacing between items */
+        flex-direction: row;
+        gap: var(--spacing-md);
     }
 
     #dashboard div {
-        font-size: var(--font-size-lg); /* Larger font size for large screens */
-        padding: var(--spacing-md); /* Increased padding for large screens */
+        font-size: var(--font-size-base);
+        padding: var(--spacing-md);
     }
 
     .card {
-        height: 300px; /* Increased height for large screens */
+        height: 250px;
     }
 
     .card-face {
-        padding: var(--spacing-md); /* Increased padding for large screens */
+        padding: var(--spacing-md);
     }
 
     .company-name {
-        font-size: var(--font-size-xl); /* Larger font size for large screens */
+        font-size: var(--font-size-md);
     }
 
     .customer-name,
     .project-description {
-        font-size: var(--font-size-md); /* Larger font size for large screens */
+        font-size: var(--font-size-base);
     }
 
     .place-name {
-        font-size: var(--font-size-base); /* Larger font size for large screens */
+        font-size: var(--font-size-sm);
     }
 }
 
@@ -332,46 +337,32 @@ header img#header-title:hover {
 @keyframes fadeIn {
     0% {
         opacity: 0;
+        transform: translateY(5px);
     }
     100% {
         opacity: 1;
-    }
-}
-
-@keyframes slideIn {
-    0% {
-        transform: translateY(20px);
-        opacity: 0;
-    }
-    100% {
         transform: translateY(0);
-        opacity: 1;
     }
 }
 
 /* Apply Animations */
 #dashboard div,
 .card {
-    animation: fadeIn 0.5s ease-in-out;
+    animation: fadeIn 0.4s ease-out;
 }
 
-#loading-screen {
-    animation: slideIn 0.5s ease-in-out;
-}
-
-/* Hover Effects for Dashboard Items */
+/* Hover Effects */
 #dashboard div:hover {
-    transform: translateY(-5px);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
-    background-color: rgba(255, 255, 255, 0.2); /* Slightly lighter on hover */
+    transform: translateY(-2px);
+    background-color: rgba(255, 255, 255, 0.12);
 }
 
-/* Smooth Transitions for All Interactive Elements */
+/* Smooth Transitions */
 button,
 .card,
 .phone-icon,
 #dashboard div {
-    transition: all var(--transition-speed) ease;
+    transition: all 0.25s ease-out;
 }
 
 /* Card Number Styling */
@@ -390,4 +381,13 @@ button,
     position: absolute;
     bottom: var(--spacing-sm); /* Position at the bottom */
     right: var(--spacing-sm); /* Position at the right */
+}
+
+/* Company Name Styling */
+.company-name {
+    font-size: var(--font-size-md); /* Medium font size */
+    font-weight: bold;
+    color: var(--text-color-highlight); /* Project red color */
+    margin: var(--spacing-sm) 0;
+    transition: transform var(--transition-speed), color var(--transition-speed);
 }
