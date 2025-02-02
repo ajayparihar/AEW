@@ -1,6 +1,6 @@
 /* 
   Author: Ajay Singh
-  Version: 1.0
+  Version: 1.2
   Date: 21-09-2024
   Description: JavaScript for the AEW application. Fetches project data from Google Sheets and updates the UI.
 */
@@ -24,21 +24,24 @@ let totalProjects = 0;
 let cities = new Set();
 let companies = new Set();
 
-// Functions
+// Show loading screen
 const showLoadingScreen = () => {
     loadingScreen.style.display = 'flex';
 };
 
+// Hide loading screen
 const hideLoadingScreen = () => {
     loadingScreen.style.display = 'none';
 };
 
+// Update dashboard counts
 const updateDashboardCounts = () => {
     projectCountDisplay.textContent = totalProjects;
     citiesCountDisplay.textContent = cities.size;
     companiesCountDisplay.textContent = companies.size;
 };
 
+// Create a project card
 const createCard = (index, company, place, customer, phone, project) => {
     const card = document.createElement('div');
     card.className = 'card';
@@ -68,6 +71,7 @@ const createCard = (index, company, place, customer, phone, project) => {
     cardInner.appendChild(cardBack);
     card.appendChild(cardInner);
 
+    // Toggle card flip on click
     card.addEventListener('click', () => {
         card.classList.toggle('flipped');
     });
@@ -75,6 +79,7 @@ const createCard = (index, company, place, customer, phone, project) => {
     return card;
 };
 
+// Create phone number elements
 const createPhoneNumbers = (phone) => {
     const phoneNumbers = phone.match(/\d{10}/g);
     if (!phoneNumbers) return '';
@@ -86,6 +91,7 @@ const createPhoneNumbers = (phone) => {
     </div>`;
 };
 
+// Attach click listeners to phone icons
 const attachPhoneClickListeners = () => {
     const phoneIcons = document.querySelectorAll('.phone-icon');
     phoneIcons.forEach(icon => {
@@ -99,28 +105,27 @@ const attachPhoneClickListeners = () => {
     });
 };
 
+// Fetch CSV data from the API
 const fetchCSVData = async () => {
     showLoadingScreen();
     try {
         const response = await fetch(API_URL);
-        
-        // Check if the response is ok (status in the range 200-299)
         if (!response.ok) {
             throw new Error(`HTTP error! Status: ${response.status}`);
         }
-        
         const data = await response.text();
         processCSVData(data);
     } catch (error) {
-        console.error('Fetch error:', error); // Log detailed error
+        console.error('Fetch error:', error);
         cardContainer.innerHTML = `<p>${ERROR_MESSAGE}</p>`;
     } finally {
         hideLoadingScreen();
     }
 };
 
+// Process the fetched CSV data
 const processCSVData = (data) => {
-    console.log('CSV Data:', data); // Log the raw CSV data
+    console.log('CSV Data:', data);
     const rows = data.split('\n').filter(row => row.trim() !== '').slice(1); // Skip header
     totalProjects = rows.length;
     cardContainer.innerHTML = ''; // Clear existing cards
@@ -148,16 +153,11 @@ const processCSVData = (data) => {
     attachPhoneClickListeners(); // Attach listeners after creating cards
 };
 
-// Initialize
+// Initialize the application
 document.addEventListener("DOMContentLoaded", () => {
     fetchCSVData();
 
     // Add click event listeners for logo and header title
-    logo.addEventListener('click', () => {
-        location.reload();
-    });
-
-    headerTitle.addEventListener('click', () => {
-        location.reload();
-    });
+    logo.addEventListener('click', () => location.reload());
+    headerTitle.addEventListener('click', () => location.reload());
 });

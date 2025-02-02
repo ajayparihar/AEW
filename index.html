@@ -1,6 +1,6 @@
 <!-- 
   Author: Ajay Singh
-  Version: 1.0
+  Version: 1.3
   Date: 21-09-2024
   Description: HTML structure for the AEW application. Includes a header with the title, a dashboard section, and a card container.
 -->
@@ -9,13 +9,14 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="AEW application - Dashboard for managing projects, cities, and companies.">
     <title>AEW</title>
 
     <!-- Favicon and Apple Touch Icons -->
     <link rel="apple-touch-icon" sizes="180x180" href="favicon_io/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="favicon_io/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="favicon_io/favicon-16x16.png">
-    <link rel="manifest" href="/site.webmanifest">
+    <link rel="manifest" href="site.webmanifest">
 
     <!-- Stylesheet and Fonts -->
     <link rel="stylesheet" href="styles.css">
@@ -23,32 +24,34 @@
 </head>
 
 <body>
-    <header>
-        <img src="svg/aew-full_logo.svg" alt="AEW" id="logo">
-        <img src="svg/AEW.svg" alt="AEW" id="header-title">
+    <header role="banner">
+        <img src="svg/aew-full_logo.svg" alt="AEW company logo" id="logo" aria-label="Reload the page" class="clickable">
+        <img src="svg/AEW.svg" alt="AEW header title" id="header-title" aria-label="Reload the page" class="clickable">
     </header>
     
-    <div id="dashboard">
-        <div id="total-projects">Total Projects: <span id="projects-count">0</span></div>
-        <div id="distinct-cities">Cities: <span id="cities-count">0</span></div>
-        <div id="distinct-companies">Companies: <span id="companies-count">0</span></div>
-    </div>
+    <main>
+        <section id="dashboard">
+            <div id="total-projects">Total Projects: <span id="projects-count">0</span></div>
+            <div id="distinct-cities">Cities: <span id="cities-count">0</span></div>
+            <div id="distinct-companies">Companies: <span id="companies-count">0</span></div>
+        </section>
 
-    <div id="loading-screen">
-        <img src="svg/AEW-COG.svg" alt="Loading" id="loading-cog">
-    </div>
+        <section id="loading-screen" style="display: none;">
+            <img src="svg/AEW-COG.svg" alt="Loading indicator" id="loading-cog">
+        </section>
 
-    <div id="card-container"></div>
+        <section id="card-container"></section>
+    </main>
 
-    <script src="script.js" type="module"></script>
+    <script src="script.js" type="module" defer></script>
     <script>
-        // Add click event listeners for logo and header title to reload the page
-        document.getElementById('logo').addEventListener('click', () => {
-            location.reload();
-        });
-        
-        document.getElementById('header-title').addEventListener('click', () => {
-            location.reload();
+        document.addEventListener('DOMContentLoaded', () => {
+            const logo = document.getElementById('logo');
+            const headerTitle = document.getElementById('header-title');
+
+            // Reload the page when logo or header title is clicked
+            logo.addEventListener('click', () => location.reload());
+            headerTitle.addEventListener('click', () => location.reload());
         });
     </script>
 </body>

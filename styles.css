@@ -1,6 +1,6 @@
 /* 
   Author: Ajay Singh
-  Version: 1.1
+  Version: 1.0
   Date: 21-09-2024
   Description: Enhanced CSS for the AEW application with improved visuals and responsiveness.
 */
@@ -20,6 +20,14 @@
     --shadow-medium: 0 4px 12px rgba(0, 0, 0, 0.3);
     --border-radius: 12px; /* Slightly increased for a softer look */
     --transition-speed: 0.3s;
+    --font-size-sm: 0.9rem;
+    --font-size-base: 1rem;
+    --font-size-md: 1.2rem;
+    --font-size-lg: 1.8rem;
+    --font-size-xl: 2.4rem;
+    --spacing-sm: 10px;
+    --spacing-md: 20px;
+    --spacing-lg: 30px;
 }
 
 /* Global Styles */
@@ -59,15 +67,14 @@ header {
 header img#logo {
     position: absolute;
     left: 20px; /* Keep logo fixed to the left */
-    width: 80px; /* Adjusted size */
+    width: 60px; /* Smaller size for mobile */
     transition: transform var(--transition-speed), filter var(--transition-speed);
 }
 
 header img#header-title {
-    width: 160px; /* Adjusted size */
-    margin: 0 20px; /* Add margin for spacing */
+    width: 120px; /* Smaller size for mobile */
+    margin: 0 10px; /* Reduced margin for mobile */
 }
-
 
 /* Logo Hover Effect */
 header img#logo:hover {
@@ -84,75 +91,50 @@ header img#header-title:hover {
 /* Dashboard Section Styling */
 #dashboard {
     display: flex;
-    justify-content: space-around;
+    flex-direction: column; /* Stack items vertically on mobile */
+    gap: 10px; /* Add spacing between items */
     margin: 20px 0;
     background-color: var(--dashboard-bg-color);
-    padding: 20px;
+    padding: 15px;
     border-radius: var(--border-radius);
     box-shadow: var(--shadow-light);
-    transition: background-color var(--transition-speed), transform var(--transition-speed);
-    flex-wrap: wrap; /* Allow items to wrap for better responsiveness */
-}
-
-/* Dashboard Hover Effect */
-#dashboard:hover {
-    background-color: rgba(255, 255, 255, 0.05); /* Slightly lighter on hover */
-    transform: translateY(-3px); /* Less pronounced lift */
 }
 
 /* Dashboard Item Styles */
 #dashboard div {
-    flex: 1 1 250px; /* Allow flexibility in size, with a minimum width */
-    margin: 10px; /* Added margin for spacing */
-    font-size: 1.2rem; /* Responsive font size */
+    flex: 1;
+    font-size: var(--font-size-sm); /* Small font size */
     font-weight: bold;
     color: var(--text-color-light);
     text-align: center;
-    padding: 15px;
+    padding: 10px;
     border-radius: var(--border-radius);
     background-color: rgba(255, 255, 255, 0.15); /* Increased opacity for better visibility */
     box-shadow: var(--shadow-medium);
     transition: transform var(--transition-speed), box-shadow var(--transition-speed), background-color var(--transition-speed), color var(--transition-speed);
 }
 
-/* Dashboard Item Hover and Click Effect */
-#dashboard div:hover,
-#dashboard div:active {
-    transform: scale(1.05);
-    box-shadow: 0 6px 30px rgba(0, 0, 0, 0.5);
-    background-color: var(--text-color-highlight);
-    color: var(--text-color-light); /* Change text color to light */
-}
-
-/* Change color of count elements on hover */
-#dashboard div:hover #projects-count,
-#dashboard div:hover #cities-count,
-#dashboard div:hover #companies-count {
-    color: var(--text-color-light); /* Change color to the same as text color */
-}
-
 /* Dashboard Count Styles */
 #projects-count,
 #cities-count,
 #companies-count {
-    font-size: 1.5rem; /* Responsive font size */
+    font-size: 1.2rem; /* Smaller font size for mobile */
     color: var(--text-color-highlight); /* Changed color to highlight */
     transition: color var(--transition-speed); /* Add transition for color change */
 }
 
 /* Card Container Styling */
 #card-container {
-    display: flex;
-    flex-wrap: wrap;
-    gap: 20px;
-    justify-content: center;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Responsive grid */
+    gap: 15px; /* Add spacing between cards */
+    padding: 10px;
 }
 
 /* Card Styles */
 .card {
-    flex: 1 1 250px; /* Allow cards to be flexible */
-    max-width: 300px; /* Limit maximum width for better layout */
-    height: 300px;
+    width: 100%; /* Full width for mobile */
+    height: 250px; /* Reduced height for mobile */
     perspective: 1000px;
     position: relative;
     cursor: pointer;
@@ -160,12 +142,6 @@ header img#header-title:hover {
     border-radius: var(--border-radius);
     transition: transform 0.4s ease, box-shadow var(--transition-speed);
     box-shadow: var(--shadow-medium);
-}
-
-/* Card Hover Effect */
-.card:hover {
-    transform: scale(1.05);
-    box-shadow: 0 6px 25px rgba(0, 0, 0, 0.5);
 }
 
 /* Flip Animation */
@@ -193,6 +169,7 @@ header img#header-title:hover {
     justify-content: center;
     text-align: center;
     border-radius: var(--border-radius);
+    padding: 15px; /* Add padding for better spacing */
 }
 
 /* Card Front Face Styles */
@@ -206,108 +183,29 @@ header img#header-title:hover {
     background-color: #3a3a3a;
     color: var(--text-color-light);
     transform: rotateY(180deg);
-    padding: 10px;
-    box-sizing: border-box;
-}
-
-/* Card Content Styling */
-.card-number {
-    font-size: 1rem; /* Responsive font size */
-    color: #888;
-    position: absolute;
-    top: 10px;
-    left: 10px;
-}
-
-.company-name {
-    font-size: 1.5rem; /* Responsive font size */
-    font-weight: bold;
-    color: var(--text-color-highlight);
-    margin: 10px 0; /* Adjusted margin for better spacing */
-    transition: transform var(--transition-speed), color var(--transition-speed);
-}
-
-.company-name:hover {
-    color: var(--text-color-light); /* Change color on hover */
-    transform: scale(1.05); /* Slightly enlarge on hover */
-}
-
-.customer-name,
-.project-description {
-    font-size: 1rem; /* Responsive font size */
-    color: var(--text-color-light);
-    margin-bottom: 5px;
-    text-align: center;
-}
-
-/* Place Name on Flipped Cards */
-.place-name {
-    font-size: 1rem; /* Responsive font size */
-    color: var(--text-color-light);
-    position: absolute;
-    bottom: 10px;
-    right: 10px;
 }
 
 /* Phone Icon and Numbers */
 .phone-numbers {
     position: absolute;
-    bottom: 10px;
-    left: 10px;
+    bottom: var(--spacing-sm);
+    left: var(--spacing-sm);
     text-align: left;
     display: flex;
     flex-direction: column;
-    gap: 5px;
+    gap: var(--spacing-xs);
 }
 
 .phone-icon {
-    font-size: 1rem; /* Responsive font size */
+    font-size: var(--font-size-base); /* Base font size */
     color: var(--text-color-light);
     cursor: pointer;
+    transition: color var(--transition-speed);
 }
 
-/* Responsive Styles */
-@media (max-width: 1024px) {
-    header img#logo {
-        width: 70px; /* Smaller logo size for medium screens */
-    }
-    header img#header-title {
-        width: 140px; /* Smaller header title size for medium screens */
-    }
-
-    #dashboard div {
-        font-size: 1rem; /* Slightly smaller font size for medium screens */
-    }
-}
-
-@media (max-width: 768px) {
-    #dashboard {
-        flex-direction: column; /* Stack items vertically */
-        align-items: stretch; /* Stretch items to take full width */
-    }
-
-    #dashboard div {
-        flex: 1 1 auto; /* Allow dashboard items to take full width */
-        width: 100%; /* Set width to 100% */
-        margin: 10px 0; /* Adjusted margin for better spacing */
-        padding: 15px; /* Adjusted padding */
-        font-size: 0.9rem; /* Smaller font size */
-    }
-
-    .card {
-        flex: 1 1 100%; /* Full width for cards on small screens */
-        max-width: none; /* Remove max-width constraint */
-    }
-
-    .card-number,
-    .customer-name,
-    .project-description,
-    .place-name {
-        font-size: 0.9rem; /* Smaller text for mobile screens */
-    }
-    .company-name {
-        font-size: 1.5rem;
-    }
+.phone-icon:hover {
+    color: var(--text-color-highlight);
+    transform: scale(1.1);
 }
 
 /* Loading Screen Styles */
@@ -339,4 +237,157 @@ header img#header-title:hover {
     100% {
         transform: rotate(360deg);
     }
+}
+
+/* Clickable Class */
+.clickable {
+    cursor: pointer;
+    transition: transform 0.2s;
+}
+
+.clickable:hover {
+    transform: scale(1.05);
+}
+
+/* Responsive Styles for Mobile */
+@media (max-width: 768px) {
+    body {
+        padding: var(--spacing-sm);
+        padding-top: 70px; /* Adjusted for smaller header */
+    }
+
+    header img#logo {
+        width: 50px; /* Smaller logo for mobile */
+    }
+
+    header img#header-title {
+        width: 100px; /* Smaller header title for mobile */
+    }
+
+    #dashboard {
+        padding: var(--spacing-sm); /* Reduced padding for mobile */
+    }
+
+    #dashboard div {
+        font-size: var(--font-size-sm); /* Smaller font size for mobile */
+    }
+
+    .card {
+        height: 200px; /* Reduced height for mobile */
+    }
+
+    .card-face {
+        padding: var(--spacing-sm); /* Reduced padding for mobile */
+    }
+
+    .company-name {
+        font-size: var(--font-size-md); /* Smaller font size for mobile */
+    }
+
+    .customer-name,
+    .project-description {
+        font-size: var(--font-size-sm); /* Smaller font size for mobile */
+    }
+
+    .place-name {
+        font-size: var(--font-size-sm); /* Smaller font size for mobile */
+    }
+}
+
+/* Responsive Styles for Large Screens */
+@media (min-width: 1024px) {
+    #dashboard {
+        flex-direction: row; /* Align items horizontally on large screens */
+        gap: var(--spacing-md); /* Increase spacing between items */
+    }
+
+    #dashboard div {
+        font-size: var(--font-size-lg); /* Larger font size for large screens */
+        padding: var(--spacing-md); /* Increased padding for large screens */
+    }
+
+    .card {
+        height: 300px; /* Increased height for large screens */
+    }
+
+    .card-face {
+        padding: var(--spacing-md); /* Increased padding for large screens */
+    }
+
+    .company-name {
+        font-size: var(--font-size-xl); /* Larger font size for large screens */
+    }
+
+    .customer-name,
+    .project-description {
+        font-size: var(--font-size-md); /* Larger font size for large screens */
+    }
+
+    .place-name {
+        font-size: var(--font-size-base); /* Larger font size for large screens */
+    }
+}
+
+/* Subtle Animations */
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
+
+@keyframes slideIn {
+    0% {
+        transform: translateY(20px);
+        opacity: 0;
+    }
+    100% {
+        transform: translateY(0);
+        opacity: 1;
+    }
+}
+
+/* Apply Animations */
+#dashboard div,
+.card {
+    animation: fadeIn 0.5s ease-in-out;
+}
+
+#loading-screen {
+    animation: slideIn 0.5s ease-in-out;
+}
+
+/* Hover Effects for Dashboard Items */
+#dashboard div:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.3);
+    background-color: rgba(255, 255, 255, 0.2); /* Slightly lighter on hover */
+}
+
+/* Smooth Transitions for All Interactive Elements */
+button,
+.card,
+.phone-icon,
+#dashboard div {
+    transition: all var(--transition-speed) ease;
+}
+
+/* Card Number Styling */
+.card-number {
+    font-size: 0.9rem; /* Smaller font size for subtlety */
+    color: rgba(255, 255, 255, 0.7); /* Subtle color */
+    position: absolute;
+    top: 10px; /* Position at the top */
+    left: 10px; /* Position at the left */
+}
+
+/* Place Name Styling */
+.place-name {
+    font-size: var(--font-size-sm); /* Small font size */
+    color: rgba(255, 255, 255, 0.7); /* Subtle color */
+    position: absolute;
+    bottom: var(--spacing-sm); /* Position at the bottom */
+    right: var(--spacing-sm); /* Position at the right */
 }
