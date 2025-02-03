@@ -16,11 +16,29 @@
     <link rel="apple-touch-icon" sizes="180x180" href="favicon_io/apple-touch-icon.png">
     <link rel="icon" type="image/png" sizes="32x32" href="favicon_io/favicon-32x32.png">
     <link rel="icon" type="image/png" sizes="16x16" href="favicon_io/favicon-16x16.png">
-    <link rel="manifest" href="site.webmanifest">
+    <link rel="manifest" href="favicon_io/site.webmanifest">
 
     <!-- Stylesheet and Fonts -->
     <link rel="stylesheet" href="styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+
+    <style>
+        /* Add this CSS to prevent scrolling */
+        .no-scroll {
+            overflow: hidden;
+            height: 100%;
+        }
+        /* Ensure the body takes full height to prevent scrolling */
+        html, body {
+            height: 100%;
+            margin: 0;
+            overflow: hidden;
+        }
+        /* Allow scrolling only when no-scroll class is not present */
+        body:not(.no-scroll) {
+            overflow: auto;
+        }
+    </style>
 </head>
 
 <body>
@@ -84,10 +102,31 @@
         document.addEventListener('DOMContentLoaded', () => {
             const logo = document.getElementById('logo');
             const headerTitle = document.getElementById('header-title');
+            const body = document.body;
 
             // Reload the page when logo or header title is clicked
             logo.addEventListener('click', () => location.reload());
             headerTitle.addEventListener('click', () => location.reload());
+
+            // Function to show popup and prevent background scrolling
+            function showPopup(popupId) {
+                document.getElementById(popupId).style.display = 'block';
+                body.classList.add('no-scroll');
+            }
+
+            // Function to hide popup and allow background scrolling
+            function hidePopup(popupId) {
+                document.getElementById(popupId).style.display = 'none';
+                body.classList.remove('no-scroll');
+            }
+
+            // Example usage for project popup
+            document.getElementById('closeProjectsPopup').addEventListener('click', () => hidePopup('projectsPopup'));
+            document.getElementById('closeCitiesPopup').addEventListener('click', () => hidePopup('citiesPopup'));
+            document.getElementById('closeCompaniesPopup').addEventListener('click', () => hidePopup('companiesPopup'));
+
+            // Add event listeners to open popups as needed
+            // Example: document.getElementById('openProjectsPopup').addEventListener('click', () => showPopup('projectsPopup'));
         });
     </script>
 </body>
