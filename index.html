@@ -1,6 +1,6 @@
 <!-- 
   Author: Ajay Singh
-  Version: 1.3
+  Version: 1.1
   Date: 21-09-2024
   Description: HTML structure for the AEW application. Includes a header with the title, a dashboard section, and a card container.
 -->
@@ -24,13 +24,13 @@
 </head>
 
 <body>
-    <header role="banner">
+    <header>
         <div class="logo-container">
-            <img src="svg/aew-full_logo.svg" alt="AEW" id="logo" aria-label="Reload the page" class="clickable">
+            <img src="svg/aew-full_logo.svg" alt="AEW" id="logo" class="clickable">
             <span class="logo-fallback">AEW</span>
         </div>
         <div class="title-container">
-            <img src="svg/AEW.svg" alt="AEW" id="header-title" aria-label="Reload the page" class="clickable">
+            <img src="svg/AEW.svg" alt="AEW" id="header-title" class="clickable">
             <span class="title-fallback">AEW</span>
         </div>
     </header>
@@ -48,6 +48,36 @@
 
         <section id="card-container"></section>
     </main>
+
+    <div class="popup-overlay" id="projectsPopup">
+        <div class="popup-content">
+            <div class="popup-close" id="closeProjectsPopup">&times;</div>
+            <div class="popup-search">
+                <input type="text" id="projectSearch" placeholder="Search projects...">
+            </div>
+            <ul class="popup-list" id="projectsList"></ul>
+        </div>
+    </div>
+
+    <div class="popup-overlay" id="citiesPopup">
+        <div class="popup-content">
+            <div class="popup-close" id="closeCitiesPopup">&times;</div>
+            <div class="popup-search">
+                <input type="text" id="citySearch" placeholder="Search cities...">
+            </div>
+            <ul class="popup-list" id="citiesList"></ul>
+        </div>
+    </div>
+
+    <div class="popup-overlay" id="companiesPopup">
+        <div class="popup-content">
+            <div class="popup-close" id="closeCompaniesPopup">&times;</div>
+            <div class="popup-search">
+                <input type="text" id="companySearch" placeholder="Search companies...">
+            </div>
+            <ul class="popup-list" id="companiesList"></ul>
+        </div>
+    </div>
 
     <script src="script.js" type="module" defer></script>
     <script>
