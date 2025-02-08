@@ -364,30 +364,33 @@ const resetCardFilter = () => {
     }
 };
 
-// Initialize the application
-document.addEventListener("DOMContentLoaded", () => {
-    fetchCSVData();
+// DOM Event Listeners
+document.addEventListener('DOMContentLoaded', () => {
+    const logo = document.getElementById('logo');
+    const headerTitle = document.getElementById('header-title');
+    const body = document.body;
 
-    // Add click handlers for dashboard items
-    const addDashboardClickHandler = (id, type) => {
-        const element = document.getElementById(id);
-        if (element) {
-            element.addEventListener('click', (e) => {
-                e.preventDefault();
-                e.stopPropagation();
-                showPopup(type);
-            });
-        } else {
-            console.error(`Element with id ${id} not found`);
-        }
-    };
-
-    // Add click listeners to dashboard items
-    addDashboardClickHandler('total-projects', 'projects');
-    addDashboardClickHandler('distinct-cities', 'cities');
-    addDashboardClickHandler('distinct-companies', 'companies');
-
-    // Logo and header title clicks
+    // Reload the page when logo or header title is clicked
     logo.addEventListener('click', () => location.reload());
     headerTitle.addEventListener('click', () => location.reload());
+
+    // Function to show popup and prevent background scrolling
+    function showPopup(popupId) {
+        document.getElementById(popupId).style.display = 'block';
+        body.classList.add('no-scroll');
+    }
+
+    // Function to hide popup and allow background scrolling
+    function hidePopup(popupId) {
+        document.getElementById(popupId).style.display = 'none';
+        body.classList.remove('no-scroll');
+    }
+
+    // Add event listeners for popup close buttons
+    document.getElementById('closeProjectsPopup').addEventListener('click', () => hidePopup('projectsPopup'));
+    document.getElementById('closeCitiesPopup').addEventListener('click', () => hidePopup('citiesPopup'));
+    document.getElementById('closeCompaniesPopup').addEventListener('click', () => hidePopup('companiesPopup'));
+
+    // Initialize the application
+    fetchCSVData();
 });

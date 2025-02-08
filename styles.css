@@ -57,6 +57,22 @@
     transition: all var(--transition-speed) ease;
 }
 
+/* Scroll Control */
+.no-scroll {
+    overflow: hidden;
+    height: 100%;
+}
+
+html, body {
+    height: 100%;
+    margin: 0;
+    overflow: hidden;
+}
+
+body:not(.no-scroll) {
+    overflow: auto;
+}
+
 body {
     font-family: 'Roboto', sans-serif;
     padding: 80px 20px 20px;
