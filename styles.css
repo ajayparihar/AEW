@@ -126,9 +126,12 @@ header {
     gap: var(--spacing-md);
     margin: var(--spacing-md) auto;
     padding: var(--spacing-md);
-    background: transparent;
-    max-width: 1200px;
+    background: rgba(0, 0, 0, 0.2);
+    max-width: 100%;
     width: 100%;
+    border-radius: var(--border-radius);
+    box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.05),
+                0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 /* Stat Card Styles */
@@ -139,8 +142,9 @@ header {
     display: flex;
     align-items: center;
     gap: var(--spacing-md);
-    box-shadow: var(--shadow-light);
-    border: 1px solid var(--card-overlay);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2),
+                0 1px 1px rgba(255, 255, 255, 0.05) inset;
+    border: 1px solid rgba(255, 255, 255, 0.08);
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
     overflow: hidden;
@@ -159,8 +163,9 @@ header {
 }
 
 .stat-card:hover {
-    transform: translateY(-5px);
-    box-shadow: var(--hover-shadow);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.25),
+                0 1px 1px rgba(255, 255, 255, 0.1) inset;
     border-color: var(--text-color-highlight);
 }
 
@@ -189,6 +194,7 @@ header {
     text-overflow: ellipsis;
     max-width: 100%;
     padding-right: var(--spacing-sm);
+    text-align: center;
 }
 
 .stat-value {
@@ -353,10 +359,13 @@ header {
 #card-container {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(300px, 300px));
-    gap: var(--spacing-md);
-    padding: var(--spacing-md);
-    margin-top: var(--spacing-lg);
+    gap: var(--spacing-lg);
+    padding: var(--spacing-lg);
+    margin-top: var(--spacing-xl);
     justify-content: center;
+    background: rgba(0, 0, 0, 0.2);
+    border-radius: var(--border-radius);
+    box-shadow: inset 0 1px 1px rgba(255, 255, 255, 0.05);
 }
 
 /* Card Styles */
@@ -401,9 +410,9 @@ header {
     border-radius: var(--border-radius);
     padding: var(--spacing-lg) var(--spacing-md);
     background-color: var(--card-bg-color);
-    border: 1px solid var(--card-overlay);
-    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 
-                0 1px 3px rgba(0, 0, 0, 0.08);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2),
+                0 1px 1px rgba(255, 255, 255, 0.05) inset;
     overflow: hidden;
     transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
 }
@@ -411,9 +420,8 @@ header {
 /* Card Face Hover Effects */
 .card:hover .card-face {
     border-color: var(--text-color-highlight);
-    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15), 
-                0 3px 6px rgba(0, 0, 0, 0.1),
-                0 0 0 1px var(--text-color-highlight);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.25),
+                0 1px 1px rgba(255, 255, 255, 0.1) inset;
 }
 
 /* Front Face Specific Styles */
@@ -422,7 +430,7 @@ header {
     background: linear-gradient(
         170deg,
         var(--card-bg-color) 0%,
-        var(--dashboard-bg-color) 100%
+        rgba(24, 24, 24, 1) 100%
     );
 }
 
@@ -431,7 +439,7 @@ header {
     transform: rotateY(180deg);
     background: linear-gradient(
         190deg,
-        var(--dashboard-bg-color) 0%,
+        rgba(24, 24, 24, 1) 0%,
         var(--card-bg-color) 100%
     );
 }
@@ -454,10 +462,11 @@ header {
     text-align: center;
     position: relative;
     z-index: 1;
-    padding: 0 var(--spacing-lg);
+    padding: var(--spacing-sm) var(--spacing-lg);
     letter-spacing: 0.5px;
     text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
     transition: all 0.3s ease;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .card:hover .company-name {
@@ -512,8 +521,8 @@ header {
     right: var(--spacing-md);
     font-size: var(--font-size-sm);
     color: var(--text-color-secondary);
-    background-color: rgba(0, 0, 0, 0.15);
-    padding: 6px 12px;
+    background-color: rgba(0, 0, 0, 0.2);
+    padding: 8px 16px;
     border-radius: var(--border-radius-sm);
     max-width: 40%;
     white-space: nowrap;
@@ -521,14 +530,14 @@ header {
     text-overflow: ellipsis;
     font-weight: 400;
     letter-spacing: 0.3px;
-    backdrop-filter: blur(2px);
+    backdrop-filter: blur(4px);
     transition: all 0.3s ease;
-    border: 1px solid rgba(255, 255, 255, 0.05);
-    opacity: 0.8;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    opacity: 0.9;
 }
 
 .card:hover .place-name {
-    background-color: rgba(0, 0, 0, 0.2);
+    background-color: rgba(0, 0, 0, 0.3);
     transform: translateY(-1px);
     border-color: rgba(255, 255, 255, 0.1);
     opacity: 0.9;
