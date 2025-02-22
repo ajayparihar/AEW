@@ -1,6 +1,6 @@
 /* 
   Author: Ajay Singh
-  Version: 1.1
+  Version: 1.2
   Date: 21-09-2024
   Description: JavaScript for the AEW application. Fetches project data from Google Sheets and updates the UI.
 */
@@ -26,6 +26,10 @@ let companies = new Set();
 let projectsList = [];
 let citiesList = [];
 let companiesList = [];
+let activeFilter = {
+    type: null,
+    value: null
+};
 
 // Show loading screen
 const showLoadingScreen = () => {
@@ -37,15 +41,333 @@ const hideLoadingScreen = () => {
     loadingScreen.style.display = 'none';
 };
 
-// Update dashboard counts
+// Update dashboard counts and UI
 const updateDashboardCounts = (visibleCards) => {
     const projectsCount = visibleCards ? visibleCards.length : totalProjects;
     const citiesCount = visibleCards ? new Set(visibleCards.map(card => card.getAttribute('data-city'))).size : cities.size;
     const companiesCount = visibleCards ? new Set(visibleCards.map(card => card.getAttribute('data-company'))).size : companies.size;
 
-    projectCountDisplay.textContent = projectsCount;
-    citiesCountDisplay.textContent = citiesCount;
-    companiesCountDisplay.textContent = companiesCount;
+    // Update counts and set data attributes for totals
+    if (visibleCards) {
+        projectCountDisplay.textContent = projectsCount;
+        citiesCountDisplay.textContent = citiesCount;
+        companiesCountDisplay.textContent = companiesCount;
+        
+        projectCountDisplay.parentElement.setAttribute('data-total', `/ ${totalProjects}`);
+        citiesCountDisplay.parentElement.setAttribute('data-total', `/ ${cities.size}`);
+        companiesCountDisplay.parentElement.setAttribute('data-total', `/ ${companies.size}`);
+    } else {
+        projectCountDisplay.textContent = projectsCount;
+        citiesCountDisplay.textContent = citiesCount;
+        companiesCountDisplay.textContent = companiesCount;
+        
+        projectCountDisplay.parentElement.removeAttribute('data-total');
+        citiesCountDisplay.parentElement.removeAttribute('data-total');
+        companiesCountDisplay.parentElement.removeAttribute('data-total');
+    }
+
+    // Update filter indicators
+    updateFilterIndicators();
+};
+
+// Update filter indicators
+const updateFilterIndicators = () => {
+    const projectsElement = document.getElementById('total-projects');
+    const citiesElement = document.getElementById('distinct-cities');
+    const companiesElement = document.getElementById('distinct-companies');
+    const dashboard = document.getElementById('dashboard');
+
+    // Reset all labels to their original text
+    projectsElement.querySelector('.stat-label').textContent = 'Total Projects';
+    citiesElement.querySelector('.stat-label').textContent = 'Cities';
+    companiesElement.querySelector('.stat-label').textContent = 'Companies';
+
+    // Remove active class from all
+    projectsElement.classList.remove('active-filter');
+    citiesElement.classList.remove('active-filter');
+    companiesElement.classList.remove('active-filter');
+
+    // Remove existing clear filter button if exists
+    const existingClearButton = document.getElementById('clear-filter');
+    if (existingClearButton) {
+        existingClearButton.remove();
+    }
+
+    // Add active class and clear button if there's an active filter
+    if (activeFilter.type) {
+        let activeElement;
+        let filterText;
+        
+        switch(activeFilter.type) {
+            case 'projects':
+                activeElement = projectsElement;
+                filterText = 'Projects';
+                activeElement.querySelector('.stat-label').textContent = `PROJECTS: ${activeFilter.value}`;
+                break;
+            case 'cities':
+                activeElement = citiesElement;
+                filterText = 'Cities';
+                activeElement.querySelector('.stat-label').textContent = `CITIES: ${activeFilter.value}`;
+                break;
+            case 'companies':
+                activeElement = companiesElement;
+                filterText = 'Companies';
+                activeElement.querySelector('.stat-label').textContent = `COMPANIES: ${activeFilter.value}`;
+                break;
+        }
+
+        if (activeElement) {
+            activeElement.classList.add('active-filter');
+            
+            // Create clear filter button
+            const clearButton = document.createElement('div');
+            clearButton.id = 'clear-filter';
+            clearButton.className = 'dashboard-item clickable';
+            clearButton.textContent = `Clear ${filterText} Filter`;
+            clearButton.addEventListener('click', clearFilter);
+            
+            // Add the clear button to dashboard
+            dashboard.appendChild(clearButton);
+        }
+    }
+};
+
+// Filter cards based on selection
+const filterCards = (type, value) => {
+    const cards = document.querySelectorAll('.card');
+    
+    if (activeFilter.type === type && activeFilter.value === value) {
+        // If clicking the same filter, clear it
+        clearFilter();
+        return;
+    }
+
+    activeFilter.type = type;
+    activeFilter.value = value;
+
+    // Get the correct data attribute based on type
+    let dataAttribute;
+    switch(type) {
+        case 'projects':
+            dataAttribute = 'data-project';
+            break;
+        case 'cities':
+            dataAttribute = 'data-city';
+            break;
+        case 'companies':
+            dataAttribute = 'data-company';
+            break;
+        default:
+            console.error('Invalid filter type:', type);
+            return;
+    }
+
+    console.log(`Filtering by ${dataAttribute} with value: ${value}`);
+
+    cards.forEach(card => {
+        const cardValue = card.getAttribute(dataAttribute);
+        card.style.display = cardValue === value ? 'block' : 'none';
+    });
+
+    const visibleCards = Array.from(cards).filter(card => card.style.display !== 'none');
+    console.log(`Filtered to ${visibleCards.length} visible cards`);
+    updateDashboardCounts(visibleCards);
+};
+
+// Clear active filter
+const clearFilter = () => {
+    console.log('Clearing filter');
+    activeFilter.type = null;
+    activeFilter.value = null;
+
+    const cards = document.querySelectorAll('.card');
+    cards.forEach(card => {
+        card.style.display = 'block';
+    });
+
+    updateDashboardCounts();
+};
+
+// Initialize dashboard click handlers
+const initializeDashboard = () => {
+    // Add click handlers with debug logging
+    const projectsElement = document.getElementById('total-projects');
+    const citiesElement = document.getElementById('distinct-cities');
+    const companiesElement = document.getElementById('distinct-companies');
+
+    if (!projectsElement || !citiesElement || !companiesElement) {
+        console.error('One or more dashboard elements not found:', {
+            projects: !projectsElement,
+            cities: !citiesElement,
+            companies: !companiesElement
+        });
+        return;
+    }
+
+    projectsElement.addEventListener('click', () => {
+        console.log('Projects clicked, showing popup');
+        showPopup('projects');
+    });
+
+    citiesElement.addEventListener('click', () => {
+        console.log('Cities clicked, showing popup');
+        showPopup('cities');
+    });
+
+    companiesElement.addEventListener('click', () => {
+        console.log('Companies clicked, showing popup');
+        showPopup('companies');
+    });
+};
+
+// Popup management system
+const popupManager = {
+    currentPopup: null,
+    
+    openPopup: function(popup) {
+        if (this.currentPopup) {
+            this.closePopup();
+        }
+        this.currentPopup = popup;
+        popup.style.display = 'flex';
+        document.body.style.overflow = 'hidden'; // Prevent background scrolling
+        
+        // Add click outside listener
+        const closeOnClickOutside = (e) => {
+            if (e.target.classList.contains('popup-overlay')) {
+                this.closePopup();
+                popup.removeEventListener('click', closeOnClickOutside);
+            }
+        };
+        popup.addEventListener('click', closeOnClickOutside);
+    },
+    
+    closePopup: function() {
+        if (this.currentPopup) {
+            this.currentPopup.style.display = 'none';
+            this.currentPopup = null;
+            document.body.style.overflow = ''; // Restore scrolling
+        }
+    }
+};
+
+// Show popup with distinct values
+const showPopup = (type) => {
+    console.log(`Showing popup for type: ${type}`);
+    const popup = document.getElementById(`${type}Popup`);
+    const list = document.getElementById(`${type}List`);
+    let searchInput;
+    
+    // Get the correct search input based on type
+    switch(type) {
+        case 'projects':
+            searchInput = document.getElementById('projectSearch');
+            break;
+        case 'cities':
+            searchInput = document.getElementById('citySearch');
+            break;
+        case 'companies':
+            searchInput = document.getElementById('companySearch');
+            break;
+    }
+    
+    let items;
+    switch(type) {
+        case 'projects':
+            items = projectsList;
+            break;
+        case 'cities':
+            items = citiesList;
+            break;
+        case 'companies':
+            items = companiesList;
+            break;
+        default:
+            console.error(`Invalid type: ${type}`);
+            return;
+    }
+    
+    console.log('Elements found:', {
+        popup: popup?.id,
+        list: list?.id,
+        searchInput: searchInput?.id,
+        itemsCount: items?.length
+    });
+    
+    if (!popup || !list || !searchInput) {
+        console.error(`Popup elements for ${type} not found`);
+        return;
+    }
+
+    // Clear previous content
+    list.innerHTML = '';
+    searchInput.value = '';
+    
+    // Check if there are distinct values
+    if (!items || items.length === 0) {
+        console.warn(`No items found for ${type}`);
+        const element = document.getElementById(type === 'projects' ? 'total-projects' : 
+                                             type === 'cities' ? 'distinct-cities' : 'distinct-companies');
+        element.classList.add('ripple');
+        setTimeout(() => {
+            element.classList.remove('ripple');
+        }, 600);
+        return;
+    }
+
+    // Create and append list items
+    const createListItems = (items) => {
+        list.innerHTML = '';
+        items.forEach((item) => {
+            const li = document.createElement('li');
+            li.className = 'popup-item';
+            if (activeFilter.type === type && activeFilter.value === item) {
+                li.classList.add('selected');
+            }
+            li.textContent = item;
+            li.addEventListener('click', () => {
+                filterCards(type, item);
+                popupManager.closePopup();
+            });
+            list.appendChild(li);
+        });
+    };
+
+    // Initial list creation
+    createListItems(items);
+
+    // Remove any existing event listeners
+    const newSearchInput = searchInput.cloneNode(true);
+    searchInput.parentNode.replaceChild(newSearchInput, searchInput);
+
+    // Add search functionality
+    newSearchInput.addEventListener('input', (e) => {
+        const searchTerm = e.target.value.toLowerCase();
+        const filteredItems = items.filter(item => 
+            item.toLowerCase().includes(searchTerm)
+        );
+        createListItems(filteredItems);
+    });
+
+    // Show the popup
+    popupManager.openPopup(popup);
+};
+
+// Initialize close buttons
+const initializeCloseButtons = () => {
+    const closeButtons = document.querySelectorAll('.popup-close');
+    closeButtons.forEach(button => {
+        button.addEventListener('click', () => {
+            popupManager.closePopup();
+        });
+    });
+
+    // Add escape key handler
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape') {
+            popupManager.closePopup();
+        }
+    });
 };
 
 // Create a project card
@@ -144,12 +466,18 @@ const processCSVData = (data) => {
         return;
     }
 
+    // Clear existing sets
+    cities.clear();
+    companies.clear();
+    const projectsSet = new Set();
+
     rows.forEach((row, index) => {
         const columns = row.split(',');
         if (columns.length === 5) {
             const [company, place, customer, phone, project] = columns.map(col => col.trim());
             companies.add(company);
             cities.add(place);
+            projectsSet.add(project);
 
             const card = createCard(index, company, place, customer, phone, project);
             cardContainer.appendChild(card);
@@ -158,239 +486,19 @@ const processCSVData = (data) => {
         }
     });
 
+    // Create sorted lists
+    projectsList = Array.from(projectsSet).sort();
+    citiesList = Array.from(cities).sort();
+    companiesList = Array.from(companies).sort();
+
     // Attach phone click listeners after cards are created
     attachPhoneClickListeners();
     updateDashboardCounts();
-    createProjectsList();
-    createCitiesList();
-    createCompaniesList();
 };
 
-// Create the projects list
-const createProjectsList = () => {
-    const projectsSet = new Set();
-    const cards = document.querySelectorAll('.card');
-    cards.forEach(card => {
-        const project = card.getAttribute('data-project');
-        if (project) projectsSet.add(project);
-    });
-    projectsList = Array.from(projectsSet).sort();
-};
-
-// Create the cities list
-const createCitiesList = () => {
-    citiesList = Array.from(cities).sort();
-};
-
-// Create the companies list
-const createCompaniesList = () => {
-    companiesList = Array.from(companies).sort();
-};
-
-// Popup management system
-const popupManager = {
-    currentPopup: null,
-    
-    openPopup: function(popup) {
-        if (this.currentPopup) {
-            this.closePopup();
-        }
-        this.currentPopup = popup;
-        popup.style.display = 'flex';
-    },
-    
-    closePopup: function() {
-        if (this.currentPopup) {
-            this.currentPopup.style.display = 'none';
-            this.currentPopup = null;
-        }
-    }
-};
-
-// Show popup with distinct values
-const showPopup = (type) => {
-    const popup = document.getElementById(`${type}Popup`);
-    const list = document.getElementById(`${type}List`);
-    const searchInput = document.getElementById(`${type.slice(0, -1)}Search`);
-    const items = type === 'projects' ? projectsList : 
-                 type === 'cities' ? citiesList : companiesList;
-    
-    if (!popup || !list || !searchInput) {
-        console.error(`Popup elements for ${type} not found`);
-        return;
-    }
-
-    // Clear previous content
-    list.innerHTML = '';
-    searchInput.value = '';
-    
-    // Check if there are distinct values
-    if (items.length === 0) {
-        // Add ripple effect
-        const element = document.getElementById(type === 'projects' ? 'total-projects' : type === 'cities' ? 'distinct-cities' : 'distinct-companies');
-        element.classList.add('ripple');
-        setTimeout(() => {
-            element.classList.remove('ripple'); // Remove ripple class after animation
-        }, 600); // Match the duration of the ripple animation
-        return; // Do not open the popup if there are no items
-    }
-
-    // Create and append list items
-    const createListItems = (items) => {
-        list.innerHTML = '';
-        items.forEach((item) => {
-            const li = document.createElement('li');
-            li.className = 'popup-item';
-            li.textContent = item;
-            li.addEventListener('click', () => {
-                filterCards(type, item);
-                popupManager.closePopup();
-            });
-            list.appendChild(li);
-        });
-    };
-
-    // Initial list creation
-    createListItems(items);
-    
-    // Add search functionality
-    const handleSearch = (e) => {
-        const searchTerm = e.target.value.toLowerCase();
-        const filteredItems = items.filter(item => 
-            item.toLowerCase().includes(searchTerm)
-        );
-        createListItems(filteredItems);
-    };
-    
-    // Remove existing listener and add new one
-    searchInput.removeEventListener('input', handleSearch);
-    searchInput.addEventListener('input', handleSearch);
-    
-    // Add close button handler
-    const closeBtn = popup.querySelector('.popup-close');
-    if (closeBtn) {
-        closeBtn.onclick = (e) => {
-            e.preventDefault();
-            e.stopPropagation();
-            popupManager.closePopup();
-        };
-    }
-
-    // Add outside click handler
-    popup.addEventListener('click', (e) => {
-        if (e.target === popup) {
-            popupManager.closePopup();
-        }
-    });
-
-    // Open the popup
-    popupManager.openPopup(popup);
-    searchInput.focus(); // Focus on the search input, not on any list item
-};
-
-// Filter cards based on selected value
-const filterCards = (type, selectedValue) => {
-    const cards = Array.from(document.querySelectorAll('.card'));
-    const attribute = type === 'projects' ? 'data-project' : 
-                     type === 'cities' ? 'data-city' : 'data-company';
-    
-    // Hide all cards first
-    cards.forEach(card => {
-        const value = card.getAttribute(attribute);
-        if (value === selectedValue) {
-            card.style.display = 'block';
-        } else {
-            card.style.display = 'none';
-        }
-    });
-    
-    // Update card numbers for visible cards
-    const visibleCards = cards.filter(card => card.getAttribute(attribute) === selectedValue);
-    visibleCards.forEach((card, index) => {
-        card.querySelector('.card-number').textContent = index + 1;
-    });
-
-    // Update dashboard counts
-    updateDashboardCounts(visibleCards);
-
-    // Update dashboard title based on selected value
-    const dashboardTitle = document.getElementById('distinct-cities'); // Change this to the relevant ID
-    if (type === 'cities') {
-        dashboardTitle.innerHTML = `Cities: <span id="cities-count">${visibleCards.length}</span> - ${selectedValue}`;
-    } else if (type === 'projects') {
-        const projectTitle = document.getElementById('total-projects');
-        projectTitle.innerHTML = `Total Projects: <span id="projects-count">${visibleCards.length}</span> - ${selectedValue}`;
-    } else if (type === 'companies') {
-        const companiesTitle = document.getElementById('distinct-companies');
-        companiesTitle.innerHTML = `Companies: <span id="companies-count">${visibleCards.length}</span> - ${selectedValue}`;
-    }
-
-    // Add a reset button if not already present
-    if (!document.getElementById('reset-filter')) {
-        const resetButton = document.createElement('div');
-        resetButton.id = 'reset-filter';
-        resetButton.className = 'reset-button';
-        resetButton.textContent = 'Show All';
-        resetButton.onclick = resetCardFilter;
-        document.getElementById('dashboard').appendChild(resetButton);
-    }
-};
-
-// Reset card filter
-const resetCardFilter = () => {
-    const cards = Array.from(document.querySelectorAll('.card'));
-    cards.forEach((card, index) => {
-        card.style.display = 'block';
-        card.querySelector('.card-number').textContent = index + 1;
-    });
-    
-    // Reset dashboard counts
-    updateDashboardCounts();
-
-    // Reset dashboard titles to original state
-    const dashboardTitle = document.getElementById('total-projects');
-    dashboardTitle.innerHTML = `Total Projects: <span id="projects-count">${totalProjects}</span>`;
-    
-    const citiesTitle = document.getElementById('distinct-cities');
-    citiesTitle.innerHTML = `Cities: <span id="cities-count">${cities.size}</span>`;
-    
-    const companiesTitle = document.getElementById('distinct-companies');
-    companiesTitle.innerHTML = `Companies: <span id="companies-count">${companies.size}</span>`;
-
-    // Remove the reset button
-    const resetButton = document.getElementById('reset-filter');
-    if (resetButton) {
-        resetButton.remove();
-    }
-};
-
-// DOM Event Listeners
+// Initialize the application
 document.addEventListener('DOMContentLoaded', () => {
-    const logo = document.getElementById('logo');
-    const headerTitle = document.getElementById('header-title');
-    const body = document.body;
-
-    // Reload the page when logo or header title is clicked
-    logo.addEventListener('click', () => location.reload());
-    headerTitle.addEventListener('click', () => location.reload());
-
-    // Function to show popup and prevent background scrolling
-    function showPopup(popupId) {
-        document.getElementById(popupId).style.display = 'block';
-        body.classList.add('no-scroll');
-    }
-
-    // Function to hide popup and allow background scrolling
-    function hidePopup(popupId) {
-        document.getElementById(popupId).style.display = 'none';
-        body.classList.remove('no-scroll');
-    }
-
-    // Add event listeners for popup close buttons
-    document.getElementById('closeProjectsPopup').addEventListener('click', () => hidePopup('projectsPopup'));
-    document.getElementById('closeCitiesPopup').addEventListener('click', () => hidePopup('citiesPopup'));
-    document.getElementById('closeCompaniesPopup').addEventListener('click', () => hidePopup('companiesPopup'));
-
-    // Initialize the application
     fetchCSVData();
+    initializeDashboard();
+    initializeCloseButtons();
 });

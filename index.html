@@ -1,6 +1,6 @@
 <!-- 
   Author: Ajay Singh
-  Version: 1.1
+  Version: 1.2
   Date: 21-09-2024
   Description: HTML structure for the AEW application. Includes a header with the title, a dashboard section, and a card container.
 -->
@@ -38,9 +38,27 @@
     
     <main>
         <section id="dashboard">
-            <div id="total-projects">Total Projects: <span id="projects-count">0</span></div>
-            <div id="distinct-cities">Cities: <span id="cities-count">0</span></div>
-            <div id="distinct-companies">Companies: <span id="companies-count">0</span></div>
+            <div id="total-projects" class="stat-card clickable">
+                <i class="fas fa-project-diagram stat-icon"></i>
+                <div class="stat-content">
+                    <div class="stat-label">Total Projects</div>
+                    <div class="stat-value"><span id="projects-count">0</span></div>
+                </div>
+            </div>
+            <div id="distinct-cities" class="stat-card clickable">
+                <i class="fas fa-city stat-icon"></i>
+                <div class="stat-content">
+                    <div class="stat-label">Cities</div>
+                    <div class="stat-value"><span id="cities-count">0</span></div>
+                </div>
+            </div>
+            <div id="distinct-companies" class="stat-card clickable">
+                <i class="fas fa-building stat-icon"></i>
+                <div class="stat-content">
+                    <div class="stat-label">Companies</div>
+                    <div class="stat-value"><span id="companies-count">0</span></div>
+                </div>
+            </div>
         </section>
 
         <section id="loading-screen" style="display: none;">

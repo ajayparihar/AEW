@@ -1,6 +1,6 @@
 /* 
   Author: Ajay Singh
-  Version: 1.1
+  Version: 1.2
   Date: 21-09-2024
   Description: Enhanced CSS for the AEW application with improved visuals and responsiveness.
 */
@@ -91,7 +91,7 @@ header {
     background-color: var(--header-bg-color);
     display: flex;
     align-items: center;
-    padding: 0 var(--spacing-md); /* Added padding for spacing */
+    padding: 0 var(--spacing-md);
     box-shadow: var(--shadow-light);
     z-index: 1000;
 }
@@ -121,102 +121,257 @@ header {
 
 /* Dashboard Section Styling */
 #dashboard {
-    display: flex;
-    flex-direction: row; /* Default to row layout */
-    gap: var(--spacing-sm);
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 20px;
     margin: var(--spacing-md) 0;
-    background-color: var(--dashboard-bg-color);
     padding: var(--spacing-md);
+    background: transparent;
+}
+
+/* Stat Card Styles */
+.stat-card {
+    background: var(--dashboard-bg-color);
     border-radius: var(--border-radius);
+    padding: var(--spacing-lg);
+    display: flex;
+    align-items: center;
+    gap: var(--spacing-md);
     box-shadow: var(--shadow-light);
+    border: 1px solid var(--card-overlay);
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
 }
 
-/* Media query for smaller screens */
-@media (max-width: 600px) {
-    #dashboard {
-        flex-direction: column; /* Stack elements vertically */
-        align-items: center; /* Center items horizontally */
-    }
-
-    #dashboard div {
-        width: 100%; /* Make each item take full width */
-        text-align: center; /* Center text */
-    }
+.stat-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, var(--text-color-highlight) 0%, transparent 100%);
+    opacity: 0.05;
+    transition: opacity 0.3s ease;
 }
 
-/* Dashboard Item Styles */
-#dashboard div {
+.stat-card:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--hover-shadow);
+    border-color: var(--text-color-highlight);
+}
+
+.stat-card:hover::before {
+    opacity: 0.1;
+}
+
+.stat-icon {
+    font-size: 2.5rem;
+    color: var(--text-color-highlight);
+    opacity: 0.9;
+}
+
+.stat-content {
     flex: 1;
-    min-width: 150px;
-    font-size: var(--font-size-base);
+}
+
+.stat-label {
+    font-size: var(--font-size-sm);
+    color: var(--text-color-secondary);
+    margin-bottom: 5px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 100%;
+    padding-right: var(--spacing-sm);
+}
+
+.stat-value {
+    font-size: var(--font-size-lg);
     font-weight: bold;
     color: var(--text-color-light);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.stat-value::after {
+    content: attr(data-total);
+    font-size: 0.6em;
+    color: var(--text-color-secondary);
+    margin-left: 8px;
+    opacity: 0.7;
+}
+
+.stat-card.active-filter {
+    background: var(--text-color-highlight);
+    border-color: transparent;
+}
+
+.stat-card.active-filter .stat-icon,
+.stat-card.active-filter .stat-label,
+.stat-card.active-filter .stat-value {
+    color: white;
+}
+
+.stat-card.active-filter .stat-value::after {
+    color: rgba(255, 255, 255, 0.8);
+}
+
+/* Clear Filter Button Styles */
+#clear-filter {
+    grid-column: 1 / -1;
+    background: transparent !important;
+    border: 2px solid var(--text-color-highlight) !important;
+    color: var(--text-color-light) !important;
+    padding: var(--spacing-md);
     text-align: center;
-    padding: var(--spacing-sm);
-    border-radius: var(--border-radius);
-    background-color: var(--card-bg-color);
-    border: 1px solid var(--card-overlay);
-    box-shadow: var(--shadow-light);
-    transition: transform 0.2s ease, filter 0.2s ease;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+    transition: all 0.3s ease;
 }
 
-/* Dashboard Hover Effect */
-#dashboard div:hover {
-    background-color: var(--hover-overlay);
-    box-shadow: var(--shadow-medium);
+#clear-filter:hover {
+    background: var(--text-color-highlight) !important;
+    transform: translateY(-2px);
 }
 
-/* Dashboard Count Styles */
-#projects-count,
-#cities-count,
-#companies-count {
-    font-size: var(--font-size-md); /* Medium font size */
-    color: var(--text-color-highlight); /* Changed color to highlight */
-    transition: color var(--transition-speed); /* Add transition for color change */
+/* Responsive Styles */
+@media (max-width: 768px) {
+    #dashboard {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-sm);
+        margin: var(--spacing-sm) 0;
+        padding: var(--spacing-sm);
+    }
+
+    .stat-card {
+        padding: var(--spacing-md);
+        min-height: 80px;
+    }
+
+    .stat-icon {
+        font-size: 1.8rem;
+    }
+
+    .stat-label {
+        font-size: 0.75rem;
+        letter-spacing: 0.3px;
+    }
+
+    .stat-value {
+        font-size: var(--font-size-md);
+    }
+
+    #clear-filter {
+        margin-top: var(--spacing-sm);
+        padding: var(--spacing-sm);
+        font-size: var(--font-size-sm);
+    }
+
+    header {
+        height: 50px;
+        padding: 0 var(--spacing-sm);
+    }
+
+    .logo-container img {
+        height: 30px;
+        margin-right: var(--spacing-sm);
+    }
+
+    .title-container img {
+        height: 25px;
+    }
+
+    body {
+        padding-top: 60px;
+        padding-left: var(--spacing-sm);
+        padding-right: var(--spacing-sm);
+    }
+}
+
+@media (max-width: 480px) {
+    #dashboard {
+        gap: 12px;
+        padding: 8px;
+    }
+
+    .stat-card {
+        padding: var(--spacing-sm);
+        min-height: 70px;
+    }
+
+    .stat-icon {
+        font-size: 1.5rem;
+    }
+
+    .stat-content {
+        padding-left: var(--spacing-sm);
+    }
+
+    header {
+        height: 45px;
+    }
+
+    .logo-container img {
+        height: 25px;
+    }
+
+    .title-container img {
+        height: 20px;
+    }
+
+    body {
+        padding-top: 55px;
+    }
 }
 
 /* Card Container Styling */
 #card-container {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); /* Responsive grid */
-    gap: 15px; /* Add spacing between cards */
-    padding: 10px;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: var(--spacing-md);
+    padding: var(--spacing-md);
+    margin-top: var(--spacing-lg);
 }
 
 /* Card Styles */
 .card {
     width: 100%;
-    height: 250px;
+    height: 280px;
     perspective: 1000px;
     position: relative;
     cursor: pointer;
     background-color: var(--card-bg-color);
     border-radius: var(--border-radius);
-    border: 2px solid transparent;
-    transition: all 0.2s ease-out;
+    border: 1px solid var(--card-overlay);
+    transition: all 0.3s ease;
     box-shadow: var(--shadow-light);
 }
 
 .card:hover {
     border-color: var(--text-color-highlight);
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(215, 59, 35, 0.15);
+    transform: translateY(-3px);
+    box-shadow: var(--hover-shadow);
 }
 
-/* Flip Animation */
+/* Card Inner Styles */
 .card-inner {
     width: 100%;
     height: 100%;
     position: relative;
     transform-style: preserve-3d;
-    transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
 }
 
 .card.flipped .card-inner {
     transform: rotateY(180deg);
 }
 
-/* Front and Back Face Styles */
+/* Card Face Common Styles */
 .card-face {
     position: absolute;
     width: 100%;
@@ -224,51 +379,238 @@ header {
     backface-visibility: hidden;
     display: flex;
     flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    text-align: center;
+    justify-content: center; /* Center content vertically */
     border-radius: var(--border-radius);
-    padding: 15px;
-}
-
-/* Card Front Face Styles */
-.card-face.front {
+    padding: var(--spacing-lg) var(--spacing-md);
     background-color: var(--card-bg-color);
-    border: none;
-    color: var(--text-color-light);
+    overflow: hidden;
 }
 
-/* Back Face Styles */
+/* Front Face Specific Styles */
+.card-face.front {
+    justify-content: center; /* Center content vertically */
+}
+
+/* Back Face Specific Styles */
 .card-face.back {
-    background-color: var(--dashboard-bg-color);
-    border: none;
-    color: var(--text-color-light);
     transform: rotateY(180deg);
+    background-color: var(--dashboard-bg-color);
+    justify-content: center; /* Center content vertically */
 }
 
-/* Phone Icon and Numbers */
+/* Card Content Styles */
+.company-name {
+    font-size: var(--font-size-md);
+    font-weight: bold;
+    color: var(--text-color-highlight);
+    margin: 0; /* Remove margin to help with centering */
+    text-align: center;
+    position: relative;
+    z-index: 1;
+    padding: 0 var(--spacing-lg);
+}
+
+.customer-name {
+    font-size: var(--font-size-base);
+    color: var(--text-color-light);
+    margin: var(--spacing-sm) 0;
+    line-height: 1.4;
+    text-align: center; /* Center the text */
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--text-color-highlight) var(--card-bg-color);
+    padding: 0 var(--spacing-md);
+    max-height: 120px;
+}
+
+.project-description {
+    font-size: var(--font-size-base);
+    color: var(--text-color-secondary);
+    margin: var(--spacing-sm) 0;
+    line-height: 1.4;
+    text-align: center; /* Center the text */
+    max-height: 80px;
+    overflow-y: auto;
+    scrollbar-width: thin;
+    scrollbar-color: var(--text-color-highlight) var(--card-bg-color);
+    padding: 0 var(--spacing-md);
+}
+
+/* Card Number Styling */
+.card-number {
+    position: absolute;
+    top: var(--spacing-sm);
+    left: var(--spacing-sm);
+    font-size: 0.7rem;
+    color: var(--text-color-secondary);
+    font-style: italic;
+    vertical-align: sub;
+    opacity: 0.7;
+}
+
+/* Place Name Styling */
+.place-name {
+    position: absolute;
+    bottom: var(--spacing-md);
+    right: var(--spacing-md);
+    font-size: var(--font-size-sm);
+    color: var(--text-color-secondary);
+    background-color: rgba(0, 0, 0, 0.2);
+    padding: 4px 12px;
+    border-radius: var(--border-radius-sm);
+    max-width: 40%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Phone Numbers Section */
 .phone-numbers {
     position: absolute;
-    bottom: var(--spacing-sm);
-    left: var(--spacing-sm);
-    text-align: left;
+    bottom: var(--spacing-md);
+    left: var(--spacing-md);
     display: flex;
     flex-direction: column;
-    gap: var(--spacing-xs);
+    gap: var(--spacing-sm);
+    z-index: 2;
 }
 
 .phone-icon {
-    font-size: var(--font-size-base);
     color: var(--text-color-secondary);
-    cursor: pointer;
-    transition: color 0.2s ease, opacity 0.2s ease;
-    padding: var(--spacing-xs);
+    background-color: rgba(0, 0, 0, 0.2);
+    padding: 8px 12px;
+    border-radius: var(--border-radius-sm);
+    transition: all 0.3s ease;
+    width: fit-content;
 }
 
-.phone-icon:hover {
-    color: var(--text-color-highlight);
-    opacity: 0.9;
-    transform: none;
+/* Mobile Styles */
+@media (max-width: 768px) {
+    #card-container {
+        grid-template-columns: 1fr;
+        gap: var(--spacing-sm);
+        padding: var(--spacing-sm);
+        margin-top: var(--spacing-md);
+    }
+
+    .card {
+        height: 220px;
+    }
+
+    .card-face {
+        padding: var(--spacing-md) var(--spacing-sm);
+    }
+
+    .company-name {
+        font-size: var(--font-size-base);
+        margin: var(--spacing-sm) 0;
+        padding: 0 var(--spacing-md);
+    }
+
+    .customer-name {
+        max-height: 80px;
+        padding: 0 var(--spacing-sm);
+    }
+
+    .project-description {
+        max-height: 60px;
+        padding: 0 var(--spacing-sm);
+    }
+
+    .card-number {
+        font-size: 0.65rem;
+    }
+
+    .place-name {
+        bottom: var(--spacing-sm);
+        right: var(--spacing-sm);
+        padding: 3px 8px;
+        max-width: 45%;
+    }
+
+    .phone-numbers {
+        bottom: var(--spacing-sm);
+        left: var(--spacing-sm);
+    }
+
+    .phone-icon {
+        padding: 6px 10px;
+    }
+}
+
+@media (max-width: 480px) {
+    .card {
+        height: 200px;
+    }
+
+    .card-face {
+        padding: var(--spacing-sm);
+    }
+
+    .company-name {
+        font-size: 0.95rem;
+        margin: var(--spacing-sm) 0;
+        padding: 0 var(--spacing-sm);
+    }
+
+    .customer-name {
+        font-size: 0.85rem;
+        max-height: 70px;
+        line-height: 1.3;
+        padding: 0 var(--spacing-sm);
+    }
+
+    .project-description {
+        font-size: 0.85rem;
+        max-height: 50px;
+        line-height: 1.3;
+        padding: 0 var(--spacing-sm);
+    }
+
+    .phone-numbers {
+        bottom: 6px;
+        left: 6px;
+        gap: 6px;
+    }
+
+    .phone-icon {
+        padding: 5px 8px;
+        font-size: 0.85rem;
+    }
+
+    .place-name {
+        padding: 2px 6px;
+        font-size: 0.75rem;
+        max-width: 50%;
+    }
+
+    .card-number {
+        font-size: 0.6rem;
+    }
+}
+
+/* Card Hover Effects */
+.card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(135deg, var(--text-color-highlight) 0%, transparent 100%);
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    border-radius: var(--border-radius);
+    z-index: 0;
+}
+
+.card:hover::before {
+    opacity: 0.05;
+}
+
+/* Active Card Styles */
+.card:active {
+    transform: scale(0.98);
 }
 
 /* Loading Screen Styles */
@@ -337,70 +679,6 @@ header {
     transform: translateY(-1px);
 }
 
-/* Responsive Styles for Mobile */
-@media (max-width: 768px) {
-    body {
-        padding: var(--spacing-sm);
-        padding-top: 70px;
-    }
-
-    header {
-        height: 50px;
-    }
-
-    header img#logo {
-        height: 35px;
-    }
-
-    header img#header-title {
-        height: 25px;
-    }
-
-    #dashboard {
-        padding: var(--spacing-sm);
-        margin: var(--spacing-sm) 0;
-    }
-
-    #dashboard div {
-        font-size: var(--font-size-sm);
-        padding: var(--spacing-sm);
-    }
-
-    .card {
-        height: 180px;
-    }
-
-    .card-face {
-        padding: var(--spacing-sm);
-    }
-
-    .company-name {
-        font-size: var(--font-size-base);
-    }
-
-    .customer-name,
-    .project-description {
-        font-size: var(--font-size-sm);
-    }
-
-    .place-name,
-    .card-number {
-        font-size: var(--font-size-xs);
-    }
-
-    .logo-fallback {
-        font-size: var(--font-size-md);
-    }
-    
-    .title-fallback {
-        font-size: var(--font-size-base);
-    }
-
-    .logo-container {
-        left: var(--spacing-sm);
-    }
-}
-
 /* Responsive Styles for Large Screens */
 @media (min-width: 1024px) {
     #dashboard {
@@ -443,33 +721,6 @@ header {
 .company-name:hover {
     color: var(--text-color-highlight);
     transform: none;
-}
-
-/* Card Number Styling */
-.card-number {
-    font-size: 0.9rem; /* Smaller font size for subtlety */
-    color: var(--text-color-secondary);
-    position: absolute;
-    top: 10px; /* Position at the top */
-    left: 10px; /* Position at the left */
-}
-
-/* Place Name Styling */
-.place-name {
-    font-size: var(--font-size-sm); /* Small font size */
-    color: var(--text-color-secondary);
-    position: absolute;
-    bottom: var(--spacing-sm); /* Position at the bottom */
-    right: var(--spacing-sm); /* Position at the right */
-}
-
-/* Company Name Styling */
-.company-name {
-    font-size: var(--font-size-md); /* Medium font size */
-    font-weight: bold;
-    color: var(--text-color-highlight); /* Project red color */
-    margin: var(--spacing-sm) 0;
-    transition: transform var(--transition-speed), color var(--transition-speed);
 }
 
 /* Header SVG Fallback Styles */
@@ -669,4 +920,85 @@ img#header-title[src="svg/AEW.svg"]:not(:loaded) + .title-fallback {
         transform: scale(4); /* Scale up the ripple */
         opacity: 0; /* Fade out */
     }
+}
+
+.ripple {
+    animation: ripple 0.6s ease;
+}
+
+/* Popup Mobile Styles */
+@media (max-width: 768px) {
+    .popup-content {
+        max-width: 95%;
+        max-height: 85vh;
+        padding: var(--spacing-sm);
+    }
+
+    .popup-search input {
+        padding: 8px;
+        font-size: var(--font-size-sm);
+    }
+
+    .popup-item {
+        padding: 10px;
+        font-size: var(--font-size-sm);
+    }
+
+    .popup-close {
+        top: 10px;
+        right: 10px;
+        width: 20px;
+        height: 20px;
+        line-height: 20px;
+        font-size: 20px;
+    }
+}
+
+@media (max-width: 480px) {
+    .popup-content {
+        max-width: 98%;
+        max-height: 90vh;
+    }
+
+    .popup-search {
+        padding: 8px;
+    }
+
+    .popup-item {
+        padding: 8px;
+    }
+}
+
+/* Improved spacing for content */
+.card-face > * {
+    margin-bottom: var(--spacing-sm);
+}
+
+.card-face > *:last-child {
+    margin-bottom: 0;
+}
+
+/* Add smooth scrolling */
+.customer-name,
+.project-description {
+    scroll-behavior: smooth;
+}
+
+/* Improved hover states */
+.card:hover .phone-icon {
+    opacity: 1;
+    transform: translateY(-2px);
+}
+
+.card:hover .place-name {
+    background-color: rgba(0, 0, 0, 0.3);
+}
+
+/* Add text selection styles */
+.company-name::selection,
+.customer-name::selection,
+.project-description::selection,
+.place-name::selection {
+    background-color: var(--text-color-highlight);
+    color: var(--text-color-light);
 }
