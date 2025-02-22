@@ -398,7 +398,6 @@ const createCard = (index, company, place, customer, phone, project) => {
     cardFront.innerHTML = `
         <div class="card-number">${index + 1}</div>
         <div class="company-name">${company}</div>
-        <div class="place-name">${place}</div>
     `;
 
     const cardBack = document.createElement('div');
@@ -407,13 +406,17 @@ const createCard = (index, company, place, customer, phone, project) => {
         <div class="company-name">${company}</div>
         <div class="customer-name">${customer.split(':').join('<br>')}</div>
         <div class="project-description">${project}</div>
-        <div class="place-name">${place}</div>
         ${createPhoneNumbers(phone)}
     `;
+
+    const placeNameDiv = document.createElement('div');
+    placeNameDiv.className = 'place-name';
+    placeNameDiv.textContent = place;
 
     cardInner.appendChild(cardFront);
     cardInner.appendChild(cardBack);
     card.appendChild(cardInner);
+    card.appendChild(placeNameDiv);
 
     // Touch event handling for mobile swipe
     let touchStartX = 0;
@@ -437,9 +440,16 @@ const createCard = (index, company, place, customer, phone, project) => {
             const deltaX = touchEndX - touchStartX;
             const deltaY = touchEndY - touchStartY;
             
-            // Only trigger flip if horizontal swipe is greater than vertical swipe
-            // and the swipe distance is significant enough (40px)
-            if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > 40) {
+            // Calculate the absolute values for comparison
+            const absDeltaX = Math.abs(deltaX);
+            const absDeltaY = Math.abs(deltaY);
+            
+            // If the swipe is more horizontal than vertical and significant enough (40px)
+            if (absDeltaX > absDeltaY && absDeltaX > 40) {
+                card.classList.toggle('flipped');
+            }
+            // If the swipe is more vertical than horizontal and significant enough (40px)
+            else if (absDeltaY > absDeltaX && absDeltaY > 40) {
                 card.classList.toggle('flipped');
             }
         });
