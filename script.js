@@ -34,11 +34,18 @@ let activeFilter = {
 // Show loading screen
 const showLoadingScreen = () => {
     loadingScreen.style.display = 'flex';
+    // Trigger reflow to ensure transition works
+    loadingScreen.offsetHeight;
+    loadingScreen.classList.add('visible');
 };
 
 // Hide loading screen
 const hideLoadingScreen = () => {
-    loadingScreen.style.display = 'none';
+    loadingScreen.classList.remove('visible');
+    // Wait for transition to complete before hiding
+    setTimeout(() => {
+        loadingScreen.style.display = 'none';
+    }, 300); // Match the transition duration in CSS
 };
 
 // Update dashboard counts and UI
@@ -56,6 +63,11 @@ const updateDashboardCounts = (visibleCards) => {
         projectCountDisplay.parentElement.setAttribute('data-total', `/ ${totalProjects}`);
         citiesCountDisplay.parentElement.setAttribute('data-total', `/ ${cities.size}`);
         companiesCountDisplay.parentElement.setAttribute('data-total', `/ ${companies.size}`);
+
+        // If city filter is active, show number of projects in the city
+        if (activeFilter.type === 'cities') {
+            citiesCountDisplay.textContent = visibleCards.length;
+        }
     } else {
         projectCountDisplay.textContent = projectsCount;
         citiesCountDisplay.textContent = citiesCount;
@@ -107,7 +119,7 @@ const updateFilterIndicators = () => {
             case 'cities':
                 activeElement = citiesElement;
                 filterText = 'Cities';
-                activeElement.querySelector('.stat-label').textContent = `CITIES: ${activeFilter.value}`;
+                activeElement.querySelector('.stat-label').textContent = `PROJECTS IN ${activeFilter.value}`;
                 break;
             case 'companies':
                 activeElement = companiesElement;
@@ -403,10 +415,43 @@ const createCard = (index, company, place, customer, phone, project) => {
     cardInner.appendChild(cardBack);
     card.appendChild(cardInner);
 
-    // Toggle card flip on click
-    card.addEventListener('click', () => {
-        card.classList.toggle('flipped');
-    });
+    // Touch event handling for mobile swipe
+    let touchStartX = 0;
+    let touchEndX = 0;
+    let touchStartY = 0;
+    let touchEndY = 0;
+    let isTouchDevice = 'ontouchstart' in window;
+
+    if (isTouchDevice) {
+        card.addEventListener('touchstart', (e) => {
+            touchStartX = e.touches[0].clientX;
+            touchStartY = e.touches[0].clientY;
+        }, { passive: true });
+
+        card.addEventListener('touchmove', (e) => {
+            touchEndX = e.touches[0].clientX;
+            touchEndY = e.touches[0].clientY;
+        }, { passive: true });
+
+        card.addEventListener('touchend', () => {
+            const deltaX = touchEndX - touchStartX;
+            const deltaY = touchEndY - touchStartY;
+            
+            // Only trigger flip if horizontal swipe is greater than vertical swipe
+            // and the swipe distance is significant enough (40px)
+            if (Math.abs(deltaX) > Math.abs(deltaY) && Math.abs(deltaX) > 40) {
+                card.classList.toggle('flipped');
+            }
+        });
+    } else {
+        // Desktop click handling
+        card.addEventListener('click', (e) => {
+            // Don't flip if clicking on phone icon or if it's a touch device
+            if (!e.target.classList.contains('phone-icon')) {
+                card.classList.toggle('flipped');
+            }
+        });
+    }
 
     return card;
 };
@@ -501,4 +546,13 @@ document.addEventListener('DOMContentLoaded', () => {
     fetchCSVData();
     initializeDashboard();
     initializeCloseButtons();
+});
+
+// Add click handlers for header elements
+logo.addEventListener('click', () => {
+    window.location.reload();
+});
+
+headerTitle.addEventListener('click', () => {
+    window.location.reload();
 });

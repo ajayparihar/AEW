@@ -122,11 +122,13 @@ header {
 /* Dashboard Section Styling */
 #dashboard {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 20px;
-    margin: var(--spacing-md) 0;
+    grid-template-columns: repeat(3, 1fr);
+    gap: var(--spacing-md);
+    margin: var(--spacing-md) auto;
     padding: var(--spacing-md);
     background: transparent;
+    max-width: 1200px;
+    width: 100%;
 }
 
 /* Stat Card Styles */
@@ -139,7 +141,7 @@ header {
     gap: var(--spacing-md);
     box-shadow: var(--shadow-light);
     border: 1px solid var(--card-overlay);
-    transition: all 0.3s ease;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
     overflow: hidden;
 }
@@ -191,11 +193,12 @@ header {
 
 .stat-value {
     font-size: var(--font-size-lg);
-    font-weight: bold;
+    font-weight: 700;
     color: var(--text-color-light);
     display: flex;
     align-items: center;
     justify-content: center;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
 }
 
 .stat-value::after {
@@ -232,6 +235,10 @@ header {
     font-weight: 500;
     letter-spacing: 0.5px;
     transition: all 0.3s ease;
+    margin-top: var(--spacing-md);
+    width: 100%;
+    max-width: 300px;
+    justify-self: center;
 }
 
 #clear-filter:hover {
@@ -291,6 +298,12 @@ header {
         padding-left: var(--spacing-sm);
         padding-right: var(--spacing-sm);
     }
+
+    .project-description {
+        max-height: 60px;
+        padding: 0 var(--spacing-sm);
+        font-size: var(--font-size-base);
+    }
 }
 
 @media (max-width: 480px) {
@@ -327,35 +340,38 @@ header {
     body {
         padding-top: 55px;
     }
+
+    .project-description {
+        font-size: 0.85rem;
+        max-height: 50px;
+        line-height: 1.3;
+        padding: 0 var(--spacing-sm);
+    }
 }
 
 /* Card Container Styling */
 #card-container {
     display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(300px, 300px));
     gap: var(--spacing-md);
     padding: var(--spacing-md);
     margin-top: var(--spacing-lg);
+    justify-content: center;
 }
 
 /* Card Styles */
 .card {
     width: 100%;
     height: 280px;
-    perspective: 1000px;
+    perspective: 1500px;
     position: relative;
     cursor: pointer;
-    background-color: var(--card-bg-color);
+    background-color: transparent;
     border-radius: var(--border-radius);
-    border: 1px solid var(--card-overlay);
-    transition: all 0.3s ease;
-    box-shadow: var(--shadow-light);
-}
-
-.card:hover {
-    border-color: var(--text-color-highlight);
-    transform: translateY(-3px);
-    box-shadow: var(--hover-shadow);
+    transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+    touch-action: pan-x pan-y;
+    -webkit-tap-highlight-color: transparent;
+    user-select: none;
 }
 
 /* Card Inner Styles */
@@ -364,7 +380,8 @@ header {
     height: 100%;
     position: relative;
     transform-style: preserve-3d;
-    transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: transform 0.8s cubic-bezier(0.165, 0.84, 0.44, 1);
+    will-change: transform;
 }
 
 .card.flipped .card-inner {
@@ -376,65 +393,221 @@ header {
     position: absolute;
     width: 100%;
     height: 100%;
+    -webkit-backface-visibility: hidden;
     backface-visibility: hidden;
     display: flex;
     flex-direction: column;
-    justify-content: center; /* Center content vertically */
+    justify-content: center;
     border-radius: var(--border-radius);
     padding: var(--spacing-lg) var(--spacing-md);
     background-color: var(--card-bg-color);
+    border: 1px solid var(--card-overlay);
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1), 
+                0 1px 3px rgba(0, 0, 0, 0.08);
     overflow: hidden;
+    transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
+}
+
+/* Card Face Hover Effects */
+.card:hover .card-face {
+    border-color: var(--text-color-highlight);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.15), 
+                0 3px 6px rgba(0, 0, 0, 0.1),
+                0 0 0 1px var(--text-color-highlight);
 }
 
 /* Front Face Specific Styles */
 .card-face.front {
-    justify-content: center; /* Center content vertically */
+    transform: rotateY(0deg);
+    background: linear-gradient(
+        170deg,
+        var(--card-bg-color) 0%,
+        var(--dashboard-bg-color) 100%
+    );
 }
 
 /* Back Face Specific Styles */
 .card-face.back {
     transform: rotateY(180deg);
-    background-color: var(--dashboard-bg-color);
-    justify-content: center; /* Center content vertically */
+    background: linear-gradient(
+        190deg,
+        var(--dashboard-bg-color) 0%,
+        var(--card-bg-color) 100%
+    );
+}
+
+/* Card Content Hover Effects */
+.card:hover {
+    transform: translateY(-4px);
+}
+
+.card:active {
+    transform: translateY(-2px);
 }
 
 /* Card Content Styles */
 .company-name {
     font-size: var(--font-size-md);
-    font-weight: bold;
+    font-weight: 600;
     color: var(--text-color-highlight);
-    margin: 0; /* Remove margin to help with centering */
+    margin: 0;
     text-align: center;
     position: relative;
     z-index: 1;
     padding: 0 var(--spacing-lg);
+    letter-spacing: 0.5px;
+    text-shadow: 0 1px 2px rgba(0, 0, 0, 0.2);
+    transition: all 0.3s ease;
+}
+
+.card:hover .company-name {
+    color: var(--text-color-highlight);
+    text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
 }
 
 .customer-name {
     font-size: var(--font-size-base);
     color: var(--text-color-light);
     margin: var(--spacing-sm) 0;
-    line-height: 1.4;
-    text-align: center; /* Center the text */
+    line-height: 1.6;
+    text-align: center;
     overflow-y: auto;
     scrollbar-width: thin;
     scrollbar-color: var(--text-color-highlight) var(--card-bg-color);
     padding: 0 var(--spacing-md);
     max-height: 120px;
+    font-weight: 500;
+    opacity: 0.9;
+    transition: opacity 0.3s ease;
+}
+
+.card:hover .customer-name {
+    opacity: 1;
 }
 
 .project-description {
     font-size: var(--font-size-base);
-    color: var(--text-color-secondary);
-    margin: var(--spacing-sm) 0;
-    line-height: 1.4;
-    text-align: center; /* Center the text */
-    max-height: 80px;
+    color: var(--text-color-light);
+    margin: var(--spacing-md) 0;
+    line-height: 1.6;
+    text-align: center;
     overflow-y: auto;
     scrollbar-width: thin;
     scrollbar-color: var(--text-color-highlight) var(--card-bg-color);
     padding: 0 var(--spacing-md);
+    max-height: 120px;
+    font-weight: 500;
+    opacity: 0.9;
+    transition: opacity 0.3s ease;
 }
+
+.card:hover .project-description {
+    opacity: 1;
+}
+
+/* Place Name Enhancement */
+.place-name {
+    position: absolute;
+    bottom: var(--spacing-md);
+    right: var(--spacing-md);
+    font-size: var(--font-size-sm);
+    color: var(--text-color-secondary);
+    background-color: rgba(0, 0, 0, 0.15);
+    padding: 6px 12px;
+    border-radius: var(--border-radius-sm);
+    max-width: 40%;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    font-weight: 400;
+    letter-spacing: 0.3px;
+    backdrop-filter: blur(2px);
+    transition: all 0.3s ease;
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    opacity: 0.8;
+}
+
+.card:hover .place-name {
+    background-color: rgba(0, 0, 0, 0.2);
+    transform: translateY(-1px);
+    border-color: rgba(255, 255, 255, 0.1);
+    opacity: 0.9;
+}
+
+/* Phone Icon Enhancement */
+.phone-icon {
+    color: var(--text-color-secondary);
+    background-color: rgba(0, 0, 0, 0.4);
+    padding: 10px 14px;
+    border-radius: var(--border-radius-sm);
+    transition: all 0.3s cubic-bezier(0.165, 0.84, 0.44, 1);
+    width: fit-content;
+    opacity: 0.8;
+    border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.phone-icon:hover {
+    background-color: var(--text-color-highlight);
+    color: var(--text-color-light);
+    opacity: 1;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    border-color: transparent;
+}
+
+/* Mobile Optimizations */
+@media (max-width: 768px) {
+    .card {
+        height: 220px;
+        perspective: 1200px;
+    }
+
+    .card:hover {
+        transform: none;
+    }
+
+    .card-inner {
+        transition: transform 0.6s cubic-bezier(0.165, 0.84, 0.44, 1);
+    }
+
+    .card-face {
+        padding: var(--spacing-md) var(--spacing-sm);
+    }
+
+    .place-name {
+        padding: 6px 12px;
+        font-size: 0.85rem;
+    }
+
+    .phone-icon {
+        padding: 8px 12px;
+    }
+}
+
+/* Card Loading Animation */
+@keyframes cardEntrance {
+    from {
+        opacity: 0;
+        transform: scale(0.95);
+        filter: blur(2px);
+    }
+    to {
+        opacity: 1;
+        transform: scale(1);
+        filter: blur(0);
+    }
+}
+
+.card {
+    animation: cardEntrance 0.5s cubic-bezier(0.165, 0.84, 0.44, 1) forwards;
+}
+
+/* Stagger card animations */
+#card-container .card:nth-child(1) { animation-delay: 0.1s; }
+#card-container .card:nth-child(2) { animation-delay: 0.15s; }
+#card-container .card:nth-child(3) { animation-delay: 0.2s; }
+#card-container .card:nth-child(4) { animation-delay: 0.25s; }
+#card-container .card:nth-child(5) { animation-delay: 0.3s; }
 
 /* Card Number Styling */
 .card-number {
@@ -448,22 +621,6 @@ header {
     opacity: 0.7;
 }
 
-/* Place Name Styling */
-.place-name {
-    position: absolute;
-    bottom: var(--spacing-md);
-    right: var(--spacing-md);
-    font-size: var(--font-size-sm);
-    color: var(--text-color-secondary);
-    background-color: rgba(0, 0, 0, 0.2);
-    padding: 4px 12px;
-    border-radius: var(--border-radius-sm);
-    max-width: 40%;
-    white-space: nowrap;
-    overflow: hidden;
-    text-overflow: ellipsis;
-}
-
 /* Phone Numbers Section */
 .phone-numbers {
     position: absolute;
@@ -475,19 +632,10 @@ header {
     z-index: 2;
 }
 
-.phone-icon {
-    color: var(--text-color-secondary);
-    background-color: rgba(0, 0, 0, 0.2);
-    padding: 8px 12px;
-    border-radius: var(--border-radius-sm);
-    transition: all 0.3s ease;
-    width: fit-content;
-}
-
 /* Mobile Styles */
 @media (max-width: 768px) {
     #card-container {
-        grid-template-columns: 1fr;
+        grid-template-columns: minmax(280px, 300px);
         gap: var(--spacing-sm);
         padding: var(--spacing-sm);
         margin-top: var(--spacing-md);
@@ -495,6 +643,11 @@ header {
 
     .card {
         height: 220px;
+        perspective: 1200px;
+    }
+
+    .card-inner {
+        transition: transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
     }
 
     .card-face {
@@ -580,8 +733,9 @@ header {
 
     .place-name {
         padding: 2px 6px;
-        font-size: 0.75rem;
+        font-size: 0.7rem;
         max-width: 50%;
+        opacity: 0.7;
     }
 
     .card-number {
@@ -626,21 +780,56 @@ header {
     align-items: center;
     z-index: 2000;
     backdrop-filter: var(--loading-blur);
-    display: none;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+}
+
+#loading-screen.visible {
+    opacity: 1;
 }
 
 #loading-cog {
-    width: 40px;
-    height: 40px;
-    animation: rotate 1s cubic-bezier(0.4, 0, 0.2, 1) infinite;
+    width: 60px;
+    height: 60px;
+    transform-origin: center center;
+    animation: spin 1.2s linear infinite,
+               breathe 2s ease-in-out infinite;
+    filter: drop-shadow(0 0 8px rgba(215, 59, 35, 0.3));
+    will-change: transform;
 }
 
-@keyframes rotate {
+@keyframes spin {
     0% {
         transform: rotate(0deg);
     }
     100% {
         transform: rotate(360deg);
+    }
+}
+
+@keyframes breathe {
+    0%, 100% {
+        transform: scale(1) rotate(0deg);
+        opacity: 0.8;
+    }
+    50% {
+        transform: scale(1.1) rotate(180deg);
+        opacity: 1;
+    }
+}
+
+/* Loading screen responsive styles */
+@media (max-width: 768px) {
+    #loading-cog {
+        width: 50px;
+        height: 50px;
+    }
+}
+
+@media (max-width: 480px) {
+    #loading-cog {
+        width: 40px;
+        height: 40px;
     }
 }
 
@@ -772,13 +961,25 @@ img#header-title[src="svg/AEW.svg"]:not(:loaded) + .title-fallback {
 .popup-content {
     background: var(--dashboard-bg-color);
     border-radius: var(--border-radius);
-    padding: var(--spacing-md);
+    padding: var(--spacing-lg);
     max-width: 90%;
     max-height: 80vh;
     overflow-y: auto;
     border: 1px solid var(--card-overlay);
     box-shadow: var(--shadow-medium);
     position: relative;
+    animation: popup-slide-up 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+@keyframes popup-slide-up {
+    from {
+        opacity: 0;
+        transform: translateY(20px);
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0);
+    }
 }
 
 /* Popup List */
@@ -806,11 +1007,23 @@ img#header-title[src="svg/AEW.svg"]:not(:loaded) + .title-fallback {
 .popup-search input {
     width: 100%;
     padding: var(--spacing-sm);
-    border: 1px solid var(--card-overlay);
+    border: 2px solid var(--card-overlay);
     border-radius: var(--border-radius);
     margin-bottom: var(--spacing-sm);
     background: var(--card-bg-color);
     color: var(--text-color-light);
+    font-size: var(--font-size-base);
+    transition: all 0.3s ease;
+}
+
+.popup-search input:focus {
+    outline: none;
+    border-color: var(--text-color-highlight);
+    box-shadow: 0 0 0 3px rgba(215, 59, 35, 0.2);
+}
+
+.popup-search input::placeholder {
+    color: var(--text-color-secondary);
 }
 
 /* Popup Close Button */
@@ -833,23 +1046,6 @@ img#header-title[src="svg/AEW.svg"]:not(:loaded) + .title-fallback {
     color: var(--text-color-highlight);
 }
 
-/* Add these styles for the search functionality */
-.popup-search {
-    margin: 0 0 var(--spacing-md);  /* Remove top margin */
-    padding: var(--spacing-sm);
-    padding-right: 40px;            /* Make space for close button */
-}
-
-.popup-search input:focus {
-    outline: none;
-    border-color: var(--text-color-highlight);
-    box-shadow: 0 0 0 2px rgba(215, 59, 35, 0.2);
-}
-
-.popup-search input::placeholder {
-    color: var(--text-color-secondary);
-}
-
 /* Add styles for the reset button */
 .reset-button {
     background-color: var(--text-color-highlight);
@@ -870,32 +1066,33 @@ img#header-title[src="svg/AEW.svg"]:not(:loaded) + .title-fallback {
 
 /* Error Message Styles */
 .error-message {
-    color: #d73b23; /* A red color for error messages */
-    background-color: rgba(215, 59, 35, 0.1); /* Light red background */
-    border: 1px solid #d73b23; /* Red border */
-    padding: var(--spacing-lg); /* Increased padding for better spacing */
+    color: var(--text-color-highlight);
+    background-color: rgba(215, 59, 35, 0.1);
+    border: 2px solid var(--text-color-highlight);
+    padding: var(--spacing-lg);
     border-radius: var(--border-radius);
-    margin: var(--spacing-md) auto; /* Center horizontally with auto margins */
-    font-weight: bold; /* Make the text bold */
-    text-align: center; /* Center the text */
-    width: 90%; /* Full width with some margin */
-    max-width: 600px; /* Limit the width */
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2); /* Subtle shadow for depth */
-    font-size: var(--font-size-md); /* Adjust font size for readability */
-    transition: background-color 0.3s ease; /* Smooth transition for hover effect */
+    margin: var(--spacing-md) auto;
+    font-weight: 600;
+    text-align: center;
+    width: 90%;
+    max-width: 600px;
+    box-shadow: var(--shadow-medium);
+    font-size: var(--font-size-md);
+    animation: error-pulse 2s infinite;
 }
 
-/* Optional: Add hover effect for better user experience */
-.error-message:hover {
-    background-color: rgba(215, 59, 35, 0.2); /* Darker background on hover */
+@keyframes error-pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.02); }
+    100% { transform: scale(1); }
 }
 
 /* Media Query for Smaller Screens */
 @media (max-width: 600px) {
     .error-message {
-        font-size: var(--font-size-sm); /* Smaller font size for mobile */
-        padding: var(--spacing-md); /* Adjust padding for smaller screens */
-        width: 95%; /* Slightly wider on small screens */
+        font-size: var(--font-size-sm);
+        padding: var(--spacing-md);
+        width: 95%;
     }
 }
 
@@ -909,16 +1106,16 @@ img#header-title[src="svg/AEW.svg"]:not(:loaded) + .title-fallback {
     content: '';
     position: absolute;
     border-radius: 50%;
-    background: rgba(215, 59, 35, 0.3); /* Light red color for ripple */
+    background: rgba(215, 59, 35, 0.3);
     transform: scale(0);
     animation: ripple-animation 0.6s linear;
-    pointer-events: none; /* Prevent interaction with the ripple */
+    pointer-events: none;
 }
 
 @keyframes ripple-animation {
     to {
-        transform: scale(4); /* Scale up the ripple */
-        opacity: 0; /* Fade out */
+        transform: scale(4);
+        opacity: 0;
     }
 }
 
@@ -1001,4 +1198,24 @@ img#header-title[src="svg/AEW.svg"]:not(:loaded) + .title-fallback {
 .place-name::selection {
     background-color: var(--text-color-highlight);
     color: var(--text-color-light);
+}
+
+/* Enhanced Accessibility */
+@media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+        scroll-behavior: auto !important;
+    }
+}
+
+.card:focus-visible,
+.stat-card:focus-visible,
+.popup-item:focus-visible,
+.phone-icon:focus-visible {
+    outline: 2px solid var(--text-color-highlight);
+    outline-offset: 2px;
 }
